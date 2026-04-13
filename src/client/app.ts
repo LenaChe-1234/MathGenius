@@ -13,6 +13,7 @@ interface ApiTopic {
   category: string;
   duration_minutes: number;
   summary: string;
+  subtopics: string[];
   theory_points: string[];
   practice_easy: string[];
   practice_medium: string[];
@@ -42,6 +43,7 @@ interface TopicContent {
   category: string;
   duration: string;
   summary: string;
+  subtopics: string[];
   theory: string[];
   practice: {
     easy: string[];
@@ -93,7 +95,6 @@ interface TranslationSet {
   navPlan: string;
   navGymi: string;
   loginButton: string;
-  logoutButton: string;
   avatarProfile: string;
   avatarLogout: string;
   homeTitle: string;
@@ -133,6 +134,7 @@ interface TranslationSet {
   topicFinishedAlready: string;
   topicSavedPlan: string;
   topicCompletedMessage: string;
+  subtopicsTitle: string;
   theoryTitle: string;
   practiceStart: string;
   practiceMiddle: string;
@@ -265,6 +267,7 @@ type LocalizedTopicOverride = Partial<{
   title: string;
   category: string;
   summary: string;
+  subtopics: string[];
   theory: string[];
   practiceEasy: string[];
   practiceMedium: string[];
@@ -293,7 +296,6 @@ const translations: Record<Language, TranslationSet> = {
     navPlan: "My Plan",
     navGymi: "Gymi",
     loginButton: "Log in",
-    logoutButton: "Log out",
     avatarProfile: "User profile",
     avatarLogout: "Log out",
     homeTitle: "Learn with one clear next step, not one crowded first screen",
@@ -334,6 +336,7 @@ const translations: Record<Language, TranslationSet> = {
     topicFinishedAlready: "You already finished this",
     topicSavedPlan: "Your plan is saved.",
     topicCompletedMessage: "Great job! You finished this topic.",
+    subtopicsTitle: "Subtopics",
     theoryTitle: "What to remember",
     practiceStart: "Start here",
     practiceMiddle: "Keep going",
@@ -468,7 +471,6 @@ const translations: Record<Language, TranslationSet> = {
     navPlan: "Mein Plan",
     navGymi: "Gymi",
     loginButton: "Anmelden",
-    logoutButton: "Abmelden",
     avatarProfile: "Benutzerprofil",
     avatarLogout: "Abmelden",
     homeTitle: "Lerne mit einem klaren nächsten Schritt statt mit einer überladenen ersten Seite",
@@ -509,6 +511,7 @@ const translations: Record<Language, TranslationSet> = {
     topicFinishedAlready: "Du hast das schon geschafft",
     topicSavedPlan: "Dein Plan wurde gespeichert.",
     topicCompletedMessage: "Toll gemacht! Du hast dieses Thema geschafft.",
+    subtopicsTitle: "Unterthemen",
     theoryTitle: "Wichtig zu merken",
     practiceStart: "Hier starten",
     practiceMiddle: "Weiter so",
@@ -640,26 +643,45 @@ const translations: Record<Language, TranslationSet> = {
 
 const germanTopicContent: Record<string, LocalizedTopicOverride> = {
   fractions: {
-    title: "Brüche und Prozente",
+    title: "Brüche, Dezimalzahlen und Prozente",
     category: "Zahlen",
-    summary: "Brüche, Prozente und ihren Zusammenhang durch Bilder, Vergleiche und alltagsnahe Aufgaben verstehen.",
+    summary: "Ein Grundlagenthema mit Brüchen, Dezimalzahlen, Prozenten, Vergleichen, Rechenarten sowie Wachstum und Zerfall in einer klaren Lernstruktur.",
+    subtopics: [
+      "Brüche",
+      "Unechte Brüche und gemischte Zahlen",
+      "Zinseszins oder einfache Verzinsung",
+      "Periodische Dezimalzahlen",
+      "Brüche vergleichen",
+      "Brüche addieren und subtrahieren",
+      "Bruchteil von einer Menge",
+      "Brüche multiplizieren",
+      "Brüche dividieren",
+      "Prozente",
+      "Dezimalzahlen",
+      "Prozentwert bestimmen",
+      "Prozentrechnen im Kopf",
+      "Prozentrechnung rückwärts",
+      "Wachstum und Zerfall"
+    ],
     theory: [
-      "Ein Bruch zeigt, in wie viele gleiche Teile ein Ganzes geteilt wird und wie viele Teile gemeint sind.",
-      "Um einen Bruch in Prozent umzuwandeln, wandle ihn zuerst in eine Dezimalzahl um und multipliziere dann mit 100.",
-      "Prozente sind nützlich bei Rabatten, Leistungen, Statistiken und beim Vergleichen von Mengen."
+      "Brüche, Dezimalzahlen und Prozente sind drei verbundene Arten, einen Teil eines Ganzen zu beschreiben.",
+      "Unechte Brüche lassen sich als gemischte Zahlen schreiben, und periodische Dezimalzahlen kann man oft wieder als Brüche darstellen.",
+      "Prozentmethoden helfen bei Rabatten, Verzinsung, Wachstum, Zerfall und Rückwärtsrechnungen."
     ],
     practiceEasy: [
-      "Schreibe 1/2, 1/4 und 3/4 als Prozente.",
+      "Schreibe 1/2, 1/4 und 3/4 als Prozente und Dezimalzahlen.",
       "Vergleiche die Brüche 2/5 und 1/2.",
       "Berechne 25% von 80."
     ],
     practiceMedium: [
       "In einer Schachtel sind 24 Bleistifte. 3/8 davon sind grün. Wie viele grüne Bleistifte gibt es?",
-      "Ein Buch kostete 40 Franken und wurde dann um 15% günstiger. Wie hoch ist der neue Preis?"
+      "Ein Buch kostete 40 Franken und wurde dann um 15% günstiger. Wie hoch ist der neue Preis?",
+      "Schreibe 17/5 als gemischte Zahl und 0.333... als periodische Dezimalzahl."
     ],
     practiceHard: [
       "Ein Preis steigt um 20% und sinkt danach um 20%. Ist er wieder beim Anfangswert?",
-      "Es gibt 48 Schülerinnen und Schüler in zwei Klassen. Die erste Klasse hat 5/8 aller Kinder. Wie viele sind in der zweiten Klasse?"
+      "Es gibt 48 Schülerinnen und Schüler in zwei Klassen. Die erste Klasse hat 5/8 aller Kinder. Wie viele sind in der zweiten Klasse?",
+      "Vergleiche einfache Verzinsung und Zinseszins für 500 CHF über 3 Jahre bei 4%."
     ]
   },
   equations: {
@@ -816,6 +838,8 @@ const dom = {
   selectedTopicMeta: query<HTMLElement>("#selected-topic-meta"),
   selectedTopicSummary: query<HTMLElement>("#selected-topic-summary"),
   topicFeedback: query<HTMLElement>("#topic-feedback"),
+  selectedTopicSubtopicsTitle: query<HTMLElement>("#selected-topic-subtopics-title"),
+  selectedTopicSubtopics: query<HTMLElement>("#selected-topic-subtopics"),
   selectedTopicTheory: query<HTMLElement>("#selected-topic-theory"),
   practiceEasy: query<HTMLElement>("#practice-easy"),
   practiceMedium: query<HTMLElement>("#practice-medium"),
@@ -1173,7 +1197,8 @@ function renderShell(): void {
   dom.navTopics.textContent = t.navLearn;
   dom.navPlan.textContent = t.navPlan;
   dom.navGymi.textContent = t.navGymi;
-  dom.openAuthButton.textContent = state.account && state.authToken ? t.logoutButton : t.loginButton;
+  dom.openAuthButton.textContent = t.loginButton;
+  dom.openAuthButton.hidden = Boolean(state.account && state.authToken);
   dom.openProfileButton.textContent = t.avatarProfile;
   dom.avatarLogoutButton.textContent = t.avatarLogout;
   dom.topicsCount.textContent = String(topics.length);
@@ -1220,7 +1245,8 @@ function updateStaticTexts(): void {
   setText(".view[data-view='topics'] .section-heading h2", t.topicsTitle);
   setText(".view[data-view='topics'] .section-heading p", t.topicsText);
   setText(".view[data-view='topics'] .viewer-label", t.topicsViewerLabel);
-  setText(".view[data-view='topics'] .theory-card h4", t.theoryTitle);
+  dom.selectedTopicSubtopicsTitle.textContent = t.subtopicsTitle;
+  setText(".view[data-view='topics'] .theory-card:nth-of-type(2) h4", t.theoryTitle);
   setText(".view[data-view='topics'] .practice-column:nth-child(1) h4", t.practiceStart);
   setText(".view[data-view='topics'] .practice-column:nth-child(2) h4", t.practiceMiddle);
   setText(".view[data-view='topics'] .practice-column:nth-child(3) h4", t.practiceHard);
@@ -1405,6 +1431,7 @@ function renderSelectedTopic(): void {
     ? translations[state.language].topicFinishedAlready
     : translations[state.language].topicsFinishButton;
 
+  fillList(dom.selectedTopicSubtopics, topic.subtopics);
   fillList(dom.selectedTopicTheory, topic.theory);
   fillList(dom.practiceEasy, topic.practice.easy);
   fillList(dom.practiceMedium, topic.practice.medium);
@@ -2207,6 +2234,7 @@ function mapApiTopicToClientTopic(topic: ApiTopic, language: Language): TopicCon
     category: override?.category ?? categoryLabel(topic.category),
     duration: durationLabel(topic.duration_minutes),
     summary: override?.summary ?? topic.summary,
+    subtopics: override?.subtopics ?? topic.subtopics,
     theory: override?.theory ?? topic.theory_points,
     practice: {
       easy: override?.practiceEasy ?? topic.practice_easy,

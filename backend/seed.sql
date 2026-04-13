@@ -1,32 +1,51 @@
 insert into topics (
   slug, title, grade_band, category, duration_minutes, summary,
-  theory_points, practice_easy, practice_medium, practice_hard
+  subtopics, theory_points, practice_easy, practice_medium, practice_hard
 )
 values
   (
     'fractions',
-    'Fractions and Percentages',
+    'Fractions, Decimals, and Percentages',
     '5-6',
     'Numbers',
-    35,
-    'Understanding fractions, percentages, and their relationship through visual models, comparison, and applied problems.',
+    55,
+    'A foundation topic that connects fractions, decimals, percentages, comparison, operations, and growth problems in one structured learning path.',
     array[
-      'A fraction shows how many equal parts a whole is divided into and how many parts are taken.',
-      'To convert a fraction into a percentage, turn it into a decimal and multiply by 100.',
-      'Percentages are useful in problems about discounts, performance, statistics, and comparing quantities.'
+      'Fractions',
+      'Improper fractions and mixed numbers',
+      'Simple interest and compound interest',
+      'Repeating decimals',
+      'Comparing fractions',
+      'Adding and subtracting fractions',
+      'Finding a fraction of a set',
+      'Multiplying fractions',
+      'Dividing fractions',
+      'Percentages',
+      'Decimals',
+      'Finding the percentage value',
+      'Mental percentage calculations',
+      'Reverse percentage problems',
+      'Growth and decay'
     ],
     array[
-      'Write 1/2, 1/4, and 3/4 as percentages.',
+      'Fractions, decimals, and percentages are three connected ways to describe part of a whole.',
+      'Improper fractions can be rewritten as mixed numbers, and repeating decimals can often be written as fractions.',
+      'Percent methods are useful in discounts, interest, growth, decay, and reverse calculations.'
+    ],
+    array[
+      'Write 1/2, 1/4, and 3/4 as percentages and decimals.',
       'Compare the fractions 2/5 and 1/2.',
       'Find 25% of 80.'
     ],
     array[
       'There are 24 pencils in a box. 3/8 of them are green. How many green pencils are there?',
-      'A book cost 40 francs and then became 15% cheaper. What is the new price?'
+      'A book cost 40 francs and then became 15% cheaper. What is the new price?',
+      'Write 17/5 as a mixed number and 0.333... as a repeating decimal.'
     ],
     array[
       'A price increased by 20% and then decreased by 20%. Did it return to its original value?',
-      'There are 48 students in two classes. The first class has 5/8 of all students. How many students are in the second class?'
+      'There are 48 students in two classes. The first class has 5/8 of all students. How many students are in the second class?',
+      'Compare simple interest and compound interest for 500 CHF over 3 years at 4%.'
     ]
   ),
   (
@@ -36,6 +55,7 @@ values
     'Algebra',
     40,
     'First linear equations, the meaning of an unknown, and the habit of checking answers by substitution.',
+    array['One-step equations', 'Two-step equations', 'Checking by substitution'],
     array[
       'An equation is an equality with an unknown number that must be found.',
       'You can perform the same operations on both sides of an equation while preserving equality.',
@@ -52,6 +72,7 @@ values
     'Geometry',
     30,
     'Measuring shapes, working with units of length and area, and moving from drawings to formulas.',
+    array['Perimeter', 'Area', 'Rectangles', 'Squares', 'Compound shapes'],
     array[
       'Perimeter is the sum of all side lengths of a shape.',
       'Area shows how much space a shape covers on a flat surface.',

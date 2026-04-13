@@ -1,28 +1,47 @@
 export const seedTopics = [
     {
         slug: "fractions",
-        title: "Fractions and Percentages",
+        title: "Fractions, Decimals, and Percentages",
         grade_band: "5-6",
         category: "Numbers",
-        duration_minutes: 35,
-        summary: "Understanding fractions, percentages, and their relationship through visual models, comparison, and applied problems.",
+        duration_minutes: 55,
+        summary: "A foundation topic that connects fractions, decimals, percentages, comparison, operations, and growth problems in one structured learning path.",
+        subtopics: [
+            "Fractions",
+            "Improper fractions and mixed numbers",
+            "Simple interest and compound interest",
+            "Repeating decimals",
+            "Comparing fractions",
+            "Adding and subtracting fractions",
+            "Finding a fraction of a set",
+            "Multiplying fractions",
+            "Dividing fractions",
+            "Percentages",
+            "Decimals",
+            "Finding the percentage value",
+            "Mental percentage calculations",
+            "Reverse percentage problems",
+            "Growth and decay"
+        ],
         theory_points: [
-            "A fraction shows how many equal parts a whole is divided into and how many parts are taken.",
-            "To convert a fraction into a percentage, turn it into a decimal and multiply by 100.",
-            "Percentages are useful in problems about discounts, performance, statistics, and comparing quantities."
+            "Fractions, decimals, and percentages are three connected ways to describe part of a whole.",
+            "Improper fractions can be rewritten as mixed numbers, and repeating decimals can often be written as fractions.",
+            "Percent methods are useful in discounts, interest, growth, decay, and reverse calculations."
         ],
         practice_easy: [
-            "Write 1/2, 1/4, and 3/4 as percentages.",
+            "Write 1/2, 1/4, and 3/4 as percentages and decimals.",
             "Compare the fractions 2/5 and 1/2.",
             "Find 25% of 80."
         ],
         practice_medium: [
             "There are 24 pencils in a box. 3/8 of them are green. How many green pencils are there?",
-            "A book cost 40 francs and then became 15% cheaper. What is the new price?"
+            "A book cost 40 francs and then became 15% cheaper. What is the new price?",
+            "Write 17/5 as a mixed number and 0.333... as a repeating decimal."
         ],
         practice_hard: [
             "A price increased by 20% and then decreased by 20%. Did it return to its original value?",
-            "There are 48 students in two classes. The first class has 5/8 of all students. How many students are in the second class?"
+            "There are 48 students in two classes. The first class has 5/8 of all students. How many students are in the second class?",
+            "Compare simple interest and compound interest for 500 CHF over 3 years at 4%."
         ]
     },
     {
@@ -32,6 +51,7 @@ export const seedTopics = [
         category: "Algebra",
         duration_minutes: 40,
         summary: "First linear equations, the meaning of an unknown, and the habit of checking answers by substitution.",
+        subtopics: ["One-step equations", "Two-step equations", "Checking by substitution"],
         theory_points: [
             "An equation is an equality with an unknown number that must be found.",
             "You can perform the same operations on both sides of an equation while preserving equality.",
@@ -48,6 +68,7 @@ export const seedTopics = [
         category: "Geometry",
         duration_minutes: 30,
         summary: "Measuring shapes, working with units of length and area, and moving from drawings to formulas.",
+        subtopics: ["Perimeter", "Area", "Rectangles", "Squares", "Compound shapes"],
         theory_points: [
             "Perimeter is the sum of all side lengths of a shape.",
             "Area shows how much space a shape covers on a flat surface.",

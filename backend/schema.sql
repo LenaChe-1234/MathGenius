@@ -16,6 +16,7 @@ create table if not exists topics (
   category text not null,
   duration_minutes integer not null,
   summary text not null,
+  subtopics text[] not null default '{}',
   theory_points text[] not null,
   practice_easy text[] not null,
   practice_medium text[] not null,

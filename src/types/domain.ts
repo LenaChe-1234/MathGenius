@@ -21,6 +21,7 @@ export interface Topic {
   category: string;
   duration_minutes: number;
   summary: string;
+  subtopics: string[];
   theory_points: string[];
   practice_easy: string[];
   practice_medium: string[];
