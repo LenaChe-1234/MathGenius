@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: mathginius
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3030
+      - key: DB_PROVIDER
+        value: memory
+      - key: USE_IN_MEMORY_DATA
+        value: "true"
+      - key: AUTH_TOKEN_SECRET
+        generateValue: true

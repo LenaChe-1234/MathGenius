@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MathGinius</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="app-header">
+        <nav class="topbar topbar-app">
+          <button class="brand brand-button" id="home-button" type="button">
+            <span class="brand-mark" aria-hidden="true">
+              <svg class="brand-icon" viewBox="0 0 64 64" role="img">
+                <rect x="6" y="6" width="52" height="52" rx="16"></rect>
+                <path d="M20 22h10"></path>
+                <path d="M25 17v10"></path>
+                <path d="M36 20l8 8"></path>
+                <path d="M44 20l-8 8"></path>
+                <path d="M18 42h12"></path>
+                <path d="M18 47h12"></path>
+                <path d="M38 38h8"></path>
+              </svg>
+            </span>
+            <span>
+              <span class="brand-name">MathGinius</span>
+            </span>
+          </button>
+
+          <div class="topbar-actions">
+            <button class="ghost-link nav-link" data-view-target="home" type="button">Home</button>
+            <button class="ghost-link nav-link" data-view-target="topics" type="button">Learn</button>
+            <button class="ghost-link nav-link" data-view-target="plan" type="button">My Plan</button>
+            <button class="ghost-link nav-link" data-view-target="gymi" type="button">Gymi</button>
+          </div>
+
+          <div class="header-controls">
+            <div class="language-switcher" aria-label="Language switcher">
+              <button class="language-button active" id="lang-active-button" type="button" aria-expanded="false" aria-haspopup="true" aria-label="English">🇬🇧</button>
+              <div class="language-menu" id="language-menu" hidden>
+                <button class="language-button" id="lang-other-button" type="button" aria-label="Deutsch">🇩🇪</button>
+              </div>
+            </div>
+
+            <div class="account-corner">
+            <button class="primary-button" id="open-auth-button" type="button">Log in</button>
+
+            <div class="avatar-shell" id="avatar-shell" hidden>
+              <button class="avatar-button" id="avatar-button" type="button" aria-expanded="false">
+                <img id="avatar-image" class="avatar-image" alt="User avatar" hidden />
+                <span id="avatar-initials" class="avatar-initials">MG</span>
+                <span id="avatar-name" class="avatar-name">MathGinius</span>
+              </button>
+
+              <div class="avatar-menu" id="avatar-menu" hidden>
+                <button class="avatar-menu-item" id="open-profile-button" type="button">User profile</button>
+                <button class="avatar-menu-item" id="avatar-logout-button" type="button">Log out</button>
+              </div>
+            </div>
+          </div>
+          </div>
+        </nav>
+      </header>
+
+      <main class="view-stack">
+        <section class="view active" data-view="home">
+          <section class="hero">
+            <div class="hero-grid home-hero-grid">
+              <div class="hero-copy">
+                <h1>Learn with one clear next step, not one crowded first screen</h1>
+                <p class="hero-text">
+                  MathGinius helps a learner move through school topics, personal
+                  plans, and Gymi preparation in separate clear sections. Start on
+                  the landing page, open one section, and focus only on what matters now.
+                </p>
+
+                <div class="hero-actions">
+                  <button class="primary-button nav-link" data-view-target="topics" type="button">Open learning topics</button>
+                  <button class="secondary-button nav-link" data-view-target="auth" type="button">Create account</button>
+                </div>
+
+                <div class="hero-stats">
+                  <article>
+                    <strong id="topics-count">0</strong>
+                    <span>topics to explore</span>
+                  </article>
+                  <article>
+                    <strong id="practice-count">0</strong>
+                    <span>practice tasks</span>
+                  </article>
+                  <article>
+                    <strong id="track-count">3</strong>
+                    <span>main app sections</span>
+                  </article>
+                </div>
+              </div>
+
+              <aside class="hero-panel">
+                <div class="panel-card panel-card-accent">
+                  <p class="panel-kicker">This app includes</p>
+                  <h2>Short theory, guided practice, personal plans</h2>
+                  <p id="focus-topic-description"></p>
+                </div>
+
+                <div class="panel-card">
+                  <p class="panel-kicker">Current learner</p>
+                  <p class="learner-note" id="landing-learner-note">Create an account or log in to save your personal progress.</p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="section-block">
+            <div class="section-heading">
+              <span class="eyebrow">Main sections</span>
+              <h2>Open the section you need</h2>
+              <p>
+                The first landing explains the app. Each section below opens its own page with its own layout and purpose.
+              </p>
+            </div>
+
+            <div class="landing-grid">
+              <article class="landing-card">
+                <p class="panel-kicker">Learning Library</p>
+                <h3>Topics page</h3>
+                <p>Browse school topics, read short theory, and solve tasks from easy to hard.</p>
+                <button class="primary-button nav-link" data-view-target="topics" type="button">Go to topics</button>
+              </article>
+
+              <article class="landing-card">
+                <p class="panel-kicker">Personal Plan</p>
+                <h3>My plan page</h3>
+                <p>Build a personal study plan, choose topics, and view your current progress.</p>
+                <button class="primary-button nav-link" data-view-target="plan" type="button">Go to my plan</button>
+              </article>
+
+              <article class="landing-card">
+                <p class="panel-kicker">Gymi Preparation</p>
+                <h3>Gymi page</h3>
+                <p>Open focused Gymi tracks, mock exams, and challenge practice in a separate area.</p>
+                <button class="primary-button nav-link" data-view-target="gymi" type="button">Go to Gymi</button>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" data-view="topics">
+          <section class="section-block topics-layout">
+            <div class="section-heading">
+              <span class="eyebrow">Learning library</span>
+              <h2>Choose a topic and start learning</h2>
+              <p>
+                This page is only for exploring topics, reading theory, and practicing one idea at a time.
+              </p>
+            </div>
+
+            <div class="topics-toolbar">
+              <div class="filter-group" id="grade-filters"></div>
+              <div class="filter-group" id="category-filters"></div>
+            </div>
+
+            <div class="topics-grid">
+              <div class="topic-list" id="topic-list"></div>
+
+              <article class="topic-viewer">
+                <div class="topic-header">
+                  <div>
+                    <p class="viewer-label">Selected topic</p>
+                    <h3 id="selected-topic-title">Loading...</h3>
+                  </div>
+                  <button class="mark-button" id="mark-complete-button" type="button">I finished this topic</button>
+                </div>
+
+                <p class="topic-meta" id="selected-topic-meta"></p>
+                <p class="topic-summary" id="selected-topic-summary"></p>
+                <div class="feedback-banner" id="topic-feedback" aria-live="polite">Pick a topic to see your next step.</div>
+
+                <section class="theory-card">
+                  <h4>What to remember</h4>
+                  <ul id="selected-topic-theory"></ul>
+                </section>
+
+                <section class="practice-section">
+                  <div class="practice-column">
+                    <h4>Start here</h4>
+                    <ol id="practice-easy"></ol>
+                  </div>
+                  <div class="practice-column">
+                    <h4>Keep going</h4>
+                    <ol id="practice-medium"></ol>
+                  </div>
+                  <div class="practice-column">
+                    <h4>Big challenge</h4>
+                    <ol id="practice-hard"></ol>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" data-view="plan">
+          <section class="section-block builder-layout">
+            <div class="section-heading">
+              <span class="eyebrow">Personal planning</span>
+              <h2>Build and follow your own learning plan</h2>
+              <p>
+                This page is for selecting goals, choosing study rhythm, and checking saved progress.
+              </p>
+            </div>
+
+            <div class="builder-grid">
+              <form class="builder-card" id="study-plan-form">
+                <label>
+                  <span id="goal-label-text">What do you want to get better at?</span>
+                  <select name="goal" id="goal-select">
+                    <option value="school">School math</option>
+                    <option value="confidence">Feeling more confident</option>
+                    <option value="gymi">Gymi preparation</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span id="grade-label-text">Which level fits you best?</span>
+                  <select name="grade" id="grade-select">
+                    <option value="3-4">Grades 3-4</option>
+                    <option value="5-6">Grades 5-6</option>
+                    <option value="7-8">Grades 7-8</option>
+                    <option value="9+">Grade 9 and above</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span id="intensity-label-text">How many short study times each week?</span>
+                  <select name="intensity" id="intensity-select">
+                    <option value="light">2 sessions of 20 minutes</option>
+                    <option value="steady">3 sessions of 30 minutes</option>
+                    <option value="focus">4 sessions of 40 minutes</option>
+                  </select>
+                </label>
+
+                <fieldset class="topic-picker">
+                  <legend id="topics-legend-text">Choose topics for my plan</legend>
+                  <div id="plan-topic-options" class="checkbox-grid"></div>
+                </fieldset>
+
+                <button type="submit" class="primary-button">Save my plan</button>
+              </form>
+
+              <aside class="builder-card dashboard-card">
+                <h3>My progress</h3>
+                <div class="progress-ring">
+                  <div class="progress-ring-inner">
+                    <strong id="completion-rate">0%</strong>
+                    <span>done</span>
+                  </div>
+                </div>
+                <p class="progress-message" id="progress-message">Every small step counts.</p>
+
+                <div class="dashboard-stats">
+                  <article>
+                    <strong id="completed-topics-count">0</strong>
+                    <span>topics done</span>
+                  </article>
+                  <article>
+                    <strong id="planned-topics-count">0</strong>
+                    <span>topics picked</span>
+                  </article>
+                  <article>
+                    <strong id="weekly-plan-label">2 sessions</strong>
+                    <span>study rhythm</span>
+                  </article>
+                </div>
+
+                <section class="saved-plan">
+                  <h4>Saved plan</h4>
+                  <div id="saved-plan-summary" class="saved-plan-summary"></div>
+                  <ul id="saved-plan-topics" class="saved-plan-topics"></ul>
+                </section>
+              </aside>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" data-view="gymi">
+          <section class="section-block gymi-layout">
+            <div class="section-heading">
+              <span class="eyebrow">Gymi preparation</span>
+              <h2>Open a Gymi section when you want a challenge</h2>
+              <p>
+                This page contains separate Gymi tracks and mock exams instead of mixing them into the normal learning flow.
+              </p>
+            </div>
+
+            <div class="gymi-grid" id="gymi-track-grid"></div>
+
+            <article class="mock-exam-card">
+              <div class="mock-exam-header">
+                <div>
+                  <p class="viewer-label">Mock exam</p>
+                  <h3 id="mock-exam-title">Diagnostic Test: Kurz Gymnasium</h3>
+                </div>
+                <button class="secondary-button" id="switch-exam-button" type="button">Next mock exam</button>
+              </div>
+
+              <p id="mock-exam-description" class="topic-summary"></p>
+              <ol id="mock-exam-tasks" class="mock-exam-tasks"></ol>
+            </article>
+          </section>
+        </section>
+
+        <section class="view" data-view="profile">
+          <section class="section-block profile-layout">
+            <div class="section-heading">
+              <span class="eyebrow">User profile</span>
+              <h2>Manage your personal profile</h2>
+              <p>
+                Edit your visible profile details here. This page keeps profile information in one clear place.
+              </p>
+            </div>
+
+            <div class="profile-grid">
+              <aside class="builder-card profile-preview-card">
+                <div class="profile-avatar-large" id="profile-avatar-large">
+                  <img id="profile-avatar-image" alt="Profile avatar" hidden />
+                  <span id="profile-avatar-initials">MG</span>
+                </div>
+                <h3 id="profile-name-preview">Your profile</h3>
+                <p class="topic-summary" id="profile-email-preview">Sign in to see your email</p>
+                <p class="topic-summary" id="profile-about-preview">Add a short line about yourself or your learning goal.</p>
+              </aside>
+
+              <form class="builder-card" id="profile-form">
+                <label>
+                  <span id="profile-name-label">Name</span>
+                  <input id="profile-name-input" class="learner-input" type="text" maxlength="40" placeholder="Your name" />
+                </label>
+
+                <label>
+                  <span id="profile-email-label">Email</span>
+                  <input id="profile-email-input" class="learner-input" type="email" maxlength="120" placeholder="name@example.com" readonly />
+                </label>
+
+                <label>
+                  <span id="profile-photo-label">Photo URL</span>
+                  <input id="profile-photo-input" class="learner-input" type="url" maxlength="240" placeholder="https://..." />
+                </label>
+
+                <label>
+                  <span id="profile-grade-label">Learning level</span>
+                  <select id="profile-grade-input" class="learner-input">
+                    <option value="3-4">Grades 3-4</option>
+                    <option value="5-6">Grades 5-6</option>
+                    <option value="7-8">Grades 7-8</option>
+                    <option value="9+">Grade 9 and above</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span id="profile-about-label">About me</span>
+                  <textarea id="profile-about-input" class="profile-textarea" maxlength="180" placeholder="I want to get better at fractions and word problems."></textarea>
+                </label>
+
+                <div class="learner-row">
+                  <button id="profile-save-button" type="submit" class="primary-button">Save profile</button>
+                  <button id="profile-reset-button" class="secondary-button danger-button" type="button">Remove account</button>
+                </div>
+
+                <p class="auth-message learner-note" id="profile-message">Your profile settings help make the app feel personal.</p>
+              </form>
+              <section class="builder-card settings-actions-card">
+                <h3 id="profile-security-title">Security settings</h3>
+                <div class="settings-action-list">
+                  <button id="open-change-email-button" class="secondary-button" type="button">Change email</button>
+                  <button id="open-change-password-button" class="secondary-button" type="button">Update password</button>
+                </div>
+                <p class="auth-message learner-note" id="profile-security-message">Open a separate page to manage secure account changes.</p>
+              </section>
+            </section>
+          </section>
+        </section>
+
+        <section class="view" data-view="change-email">
+          <section class="section-block auth-page-layout">
+            <div class="section-heading">
+              <span class="eyebrow" id="change-email-eyebrow">Email settings</span>
+              <h2 id="change-email-page-title">Change email</h2>
+              <p id="change-email-page-text">Confirm the change using a code sent to your current email address.</p>
+            </div>
+
+            <div class="auth-page-grid">
+              <article class="builder-card auth-info-card">
+                <h3 id="change-email-info-title">How it works</h3>
+                <ul class="mini-checklist">
+                  <li id="change-email-step-1">Enter your new email address</li>
+                  <li id="change-email-step-2">Get a code in your current mailbox</li>
+                  <li id="change-email-step-3">Enter the code to confirm the change</li>
+                </ul>
+                <button id="back-from-change-email-button" class="secondary-button" type="button">Back to profile</button>
+              </article>
+
+              <article class="builder-card">
+                <h3 id="email-change-title">Change email</h3>
+                <form id="email-change-request-form" class="auth-form">
+                  <label class="learner-label" for="email-change-new-email-input">New email</label>
+                  <input id="email-change-new-email-input" class="learner-input" type="email" maxlength="120" placeholder="new@example.com" autocomplete="email" />
+                  <button id="email-change-request-button" class="secondary-button" type="submit">Send confirmation code</button>
+                </form>
+
+                <form id="email-change-confirm-form" class="auth-form">
+                  <label class="learner-label" for="email-change-code-input">Confirmation code from current email</label>
+                  <input id="email-change-code-input" class="learner-input" type="text" maxlength="12" inputmode="numeric" placeholder="123456" />
+                  <button id="email-change-confirm-button" class="primary-button" type="submit">Confirm new email</button>
+                  <p class="auth-message learner-note" id="email-change-message">We will send a confirmation code to your current email address.</p>
+                </form>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" data-view="change-password">
+          <section class="section-block auth-page-layout">
+            <div class="section-heading">
+              <span class="eyebrow" id="change-password-eyebrow">Password settings</span>
+              <h2 id="change-password-page-title">Update password</h2>
+              <p id="change-password-page-text">Use your current password first, then choose a stronger new one.</p>
+            </div>
+
+            <div class="auth-page-grid">
+              <article class="builder-card auth-info-card">
+                <h3 id="change-password-info-title">Before you update</h3>
+                <ul class="mini-checklist">
+                  <li id="change-password-step-1">Use at least 8 characters</li>
+                  <li id="change-password-step-2">Do not reuse an old password</li>
+                  <li id="change-password-step-3">Store it somewhere safe</li>
+                </ul>
+                <button id="back-from-change-password-button" class="secondary-button" type="button">Back to profile</button>
+              </article>
+
+              <article class="builder-card">
+                <h3 id="password-card-title">Update password</h3>
+                <form id="password-update-form" class="auth-form">
+                  <label class="learner-label" for="current-password-input">Current password</label>
+                  <input id="current-password-input" class="learner-input" type="password" minlength="8" maxlength="128" autocomplete="current-password" />
+
+                  <label class="learner-label" for="new-password-input">New password</label>
+                  <input id="new-password-input" class="learner-input" type="password" minlength="8" maxlength="128" autocomplete="new-password" />
+
+                  <button id="password-update-button" class="primary-button" type="submit">Update password</button>
+                  <p class="auth-message learner-note" id="password-update-message">Use a strong password with at least 8 characters.</p>
+                </form>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" data-view="auth">
+          <section class="section-block auth-page-layout">
+            <div class="section-heading">
+              <span class="eyebrow">Account access</span>
+              <h2>Create your account or log in</h2>
+              <p>
+                After a successful sign up or log in, this page closes and your avatar appears in the top-right corner.
+              </p>
+            </div>
+
+            <div class="auth-page-grid">
+              <article class="builder-card auth-info-card">
+                <h3>Why use an account?</h3>
+                <ul class="mini-checklist">
+                  <li>Keep your plan and progress</li>
+                  <li>Open your personal profile</li>
+                  <li>Come back to your work safely</li>
+                </ul>
+              </article>
+
+              <article class="builder-card">
+                <div class="auth-tabs" role="tablist" aria-label="Account actions">
+                  <button class="auth-tab active" id="sign-up-tab-page" type="button">Sign up</button>
+                  <button class="auth-tab" id="log-in-tab-page" type="button">Log in</button>
+                </div>
+
+                <form id="auth-form-page" class="auth-form">
+                  <div id="auth-display-name-field-page">
+                    <label class="learner-label" for="auth-display-name-input-page">What should we call you?</label>
+                    <input id="auth-display-name-input-page" class="learner-input" type="text" maxlength="40" placeholder="Type your name" />
+                  </div>
+
+                  <label class="learner-label" for="auth-email-input-page">Email</label>
+                  <input id="auth-email-input-page" class="learner-input" type="email" maxlength="120" placeholder="name@example.com" autocomplete="username" />
+
+                  <label class="learner-label" for="auth-password-input-page">Password</label>
+                  <input id="auth-password-input-page" class="learner-input" type="password" minlength="8" maxlength="128" placeholder="At least 8 characters" autocomplete="current-password" />
+
+                  <div id="auth-grade-field-page">
+                    <label class="learner-label" for="auth-grade-select-page">Which level fits you best?</label>
+                    <select id="auth-grade-select-page" class="learner-input">
+                      <option value="3-4">Grades 3-4</option>
+                      <option value="5-6" selected>Grades 5-6</option>
+                      <option value="7-8">Grades 7-8</option>
+                      <option value="9+">Grade 9 and above</option>
+                    </select>
+                  </div>
+
+                  <div class="learner-row">
+                    <button class="primary-button" id="auth-submit-button-page" type="submit">Create my account</button>
+                    <button class="secondary-button" id="auth-switch-button-page" type="button">I already have an account</button>
+                  </div>
+
+                  <p class="auth-message learner-note" id="auth-message-page">Create your own account to save your plan and progress safely.</p>
+                </form>
+
+                <section class="password-reset-card">
+                  <h3 id="password-reset-title">Forgot password?</h3>
+                  <form id="password-reset-request-form" class="auth-form">
+                    <label class="learner-label" for="password-reset-email-input">Email</label>
+                    <input id="password-reset-email-input" class="learner-input" type="email" maxlength="120" placeholder="name@example.com" autocomplete="email" />
+                    <button id="password-reset-request-button" class="secondary-button" type="submit">Send confirmation code</button>
+                  </form>
+
+                  <form id="password-reset-confirm-form" class="auth-form">
+                    <label class="learner-label" for="password-reset-code-input">Confirmation code</label>
+                    <input id="password-reset-code-input" class="learner-input" type="text" maxlength="12" inputmode="numeric" placeholder="123456" />
+
+                    <label class="learner-label" for="password-reset-new-password-input">New password</label>
+                    <input id="password-reset-new-password-input" class="learner-input" type="password" minlength="8" maxlength="128" autocomplete="new-password" />
+
+                    <button id="password-reset-confirm-button" class="primary-button" type="submit">Reset password</button>
+                    <p class="auth-message learner-note" id="password-reset-message">Enter the code from your email and choose a new password.</p>
+                  </form>
+                </section>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./dist/client/app.js"></script>
+  </body>
+</html>
