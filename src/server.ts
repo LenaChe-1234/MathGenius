@@ -6,7 +6,7 @@ async function startServer() {
   const app = await createApp();
 
   app.listen(config.port, () => {
-    console.log(`MathGinius backend listening on http://localhost:${config.port}`);
+    console.log(`MathGenius backend listening on http://localhost:${config.port}`);
     console.log(`Running with ${config.dbProvider}.`);
   });
 }

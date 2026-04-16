@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MathGinius</title>
+    <title>MathGenius</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260416-2" />
   </head>
   <body>
     <div class="page-shell">
@@ -30,125 +30,187 @@
               </svg>
             </span>
             <span>
-              <span class="brand-name">MathGinius</span>
+              <span class="brand-name">MathGenius</span>
             </span>
           </button>
 
           <div class="topbar-actions">
             <button class="ghost-link nav-link" data-view-target="home" type="button">Home</button>
-            <button class="ghost-link nav-link" data-view-target="topics" type="button">Learn</button>
-            <button class="ghost-link nav-link" data-view-target="plan" type="button">My Plan</button>
             <button class="ghost-link nav-link" data-view-target="gymi" type="button">Gymi</button>
+            <button class="ghost-link" id="nav-kurz-button" type="button">Kurz Gymnasium</button>
+            <button class="ghost-link" id="nav-lang-button" type="button">Lang Gymnasium</button>
           </div>
 
           <div class="header-controls">
-            <div class="language-switcher" aria-label="Language switcher">
-              <button class="language-button active" id="lang-active-button" type="button" aria-expanded="false" aria-haspopup="true" aria-label="English">🇬🇧</button>
-              <div class="language-menu" id="language-menu" hidden>
-                <button class="language-button" id="lang-other-button" type="button" aria-label="Deutsch">🇩🇪</button>
-              </div>
+            <div class="language-switcher" aria-label="Language switcher" id="language-switcher">
+              <button
+                class="language-button active language-flag-button"
+                id="language-toggle-button"
+                type="button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-label="Deutsch"
+              >
+                <span id="csd-flag-container" class="csd-indicator-flag csd-flag-de" aria-hidden="true"></span>
+                <span class="language-button-label" id="language-current-label">DE</span>
+                <span class="language-button-caret" aria-hidden="true"></span>
+              </button>
+              <ul class="edition-picker-dropdown" id="language-menu" hidden>
+                <li class="csd-flag csd-flag-uk">
+                  <button class="edition-link" id="language-option-en" type="button">
+                    <span class="edition-flag csd-indicator-flag csd-flag-uk" aria-hidden="true"></span>
+                    <span>English</span>
+                  </button>
+                </li>
+                <li class="csd-flag csd-flag-de" hidden>
+                  <button class="edition-link" id="language-option-de" type="button">
+                    <span class="edition-flag csd-indicator-flag csd-flag-de" aria-hidden="true"></span>
+                    <span>Deutsch</span>
+                  </button>
+                </li>
+              </ul>
             </div>
 
             <div class="account-corner">
-            <button class="primary-button" id="open-auth-button" type="button">Log in</button>
+              <button class="primary-button" id="open-auth-button" type="button">Log in</button>
 
-            <div class="avatar-shell" id="avatar-shell" hidden>
-              <button class="avatar-button" id="avatar-button" type="button" aria-expanded="false">
-                <img id="avatar-image" class="avatar-image" alt="User avatar" hidden />
-                <span id="avatar-initials" class="avatar-initials">MG</span>
-                <span id="avatar-name" class="avatar-name">MathGinius</span>
-              </button>
+              <div class="avatar-shell" id="avatar-shell" hidden>
+                <button class="avatar-button" id="avatar-button" type="button" aria-expanded="false">
+                  <img id="avatar-image" class="avatar-image" alt="User avatar" hidden />
+                  <span id="avatar-initials" class="avatar-initials">MG</span>
+                  <span id="avatar-name" class="avatar-name">MathGenius</span>
+                </button>
 
-              <div class="avatar-menu" id="avatar-menu" hidden>
-                <button class="avatar-menu-item" id="open-profile-button" type="button">User profile</button>
-                <button class="avatar-menu-item" id="avatar-logout-button" type="button">Log out</button>
+                <div class="avatar-menu" id="avatar-menu" hidden>
+                  <button class="avatar-menu-item" id="open-profile-button" type="button">User profile</button>
+                  <button class="avatar-menu-item" id="avatar-logout-button" type="button">Log out</button>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </nav>
       </header>
 
       <main class="view-stack">
         <section class="view active" data-view="home">
-          <section class="hero">
-            <div class="hero-grid home-hero-grid">
-              <div class="hero-copy">
-                <h1>Learn with one clear next step, not one crowded first screen</h1>
-                <p class="hero-text">
-                  MathGinius helps a learner move through school topics, personal
-                  plans, and Gymi preparation in separate clear sections. Start on
-                  the landing page, open one section, and focus only on what matters now.
-                </p>
+          <div class="home-stack">
+            <section class="hero home-hero">
+              <div class="hero-grid home-hero-grid">
+                <div class="hero-copy">
+                  <h1 id="home-hero-title">Prepare for Zurich Gymnasium math entrance exam tasks</h1>
+                  <p class="hero-text" id="home-hero-subtitle">
+                    Practice the most common mathematics task types for the Zurich entrance exam to Langgymnasium and Kurzgymnasium.
+                  </p>
 
-                <div class="hero-actions">
-                  <button class="primary-button nav-link" data-view-target="topics" type="button">Open learning topics</button>
-                  <button class="secondary-button nav-link" data-view-target="auth" type="button">Create account</button>
+                  <div class="hero-actions">
+                    <button class="primary-button" data-home-path="lang" type="button" id="home-hero-lang-button">Start with Langgymnasium</button>
+                    <button class="secondary-button" data-home-path="kurz" type="button" id="home-hero-kurz-button">Start with Kurzgymnasium</button>
+                  </div>
                 </div>
 
-                <div class="hero-stats">
-                  <article>
-                    <strong id="topics-count">0</strong>
-                    <span>topics to explore</span>
-                  </article>
-                  <article>
-                    <strong id="practice-count">0</strong>
-                    <span>practice tasks</span>
-                  </article>
-                  <article>
-                    <strong id="track-count">3</strong>
-                    <span>main app sections</span>
-                  </article>
-                </div>
+                <aside class="home-info-card">
+                  <ul class="hero-info-list">
+                    <li id="home-info-1">Written entrance exam</li>
+                    <li id="home-info-2">German + Mathematics</li>
+                    <li id="home-info-3">Math counts for 50% of the exam grade</li>
+                  </ul>
+                </aside>
+              </div>
+            </section>
+
+            <section class="section-block home-section">
+              <div class="benefit-grid">
+                <article class="benefit-card">
+                  <h2 id="benefit-1-title">Train typical math task types</h2>
+                  <p id="benefit-1-text">Practise common entrance exam patterns.</p>
+                </article>
+                <article class="benefit-card">
+                  <h2 id="benefit-2-title">Learn from mistakes</h2>
+                  <p id="benefit-2-text">If your answer is wrong, the app explains the solution.</p>
+                </article>
+                <article class="benefit-card">
+                  <h2 id="benefit-3-title">Choose the right exam path</h2>
+                  <p id="benefit-3-text">Follow the path that matches your exam.</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="section-block home-section">
+              <div class="exam-path-grid">
+                <article class="exam-path-card">
+                  <span class="panel-kicker" id="exam-lang-label">For pupils in 6th grade of primary school</span>
+                  <h2 id="exam-lang-title">Langgymnasium</h2>
+                  <p id="exam-lang-text">The Zurich entrance exam for Langgymnasium is for pupils in the 6th year of primary school.</p>
+                  <button class="primary-button" type="button" data-home-path="lang" id="open-lang-track-button">Start Langgymnasium math practice</button>
+                </article>
+
+                <article class="exam-path-card">
+                  <span class="panel-kicker" id="exam-kurz-label">For students in the 2nd or 3rd year of secondary school</span>
+                  <h2 id="exam-kurz-title">Kurzgymnasium</h2>
+                  <p id="exam-kurz-text">The Zurich entrance exam for Kurzgymnasium is for students in the 2nd or 3rd year of secondary school.</p>
+                  <button class="primary-button" type="button" data-home-path="kurz" id="open-kurz-track-button">Start Kurzgymnasium math practice</button>
+                </article>
+              </div>
+            </section>
+
+            <section class="section-block home-section">
+              <div class="section-heading">
+                <span class="eyebrow" id="admission-eyebrow">Admission in the Canton of Zurich</span>
+                <h2 id="admission-title">How entry to a Zurich Gymnasium works</h2>
+                <p id="admission-text">In the Canton of Zurich, entry to a Gymnasium normally requires passing the Zentralen Aufnahmeprüfung (ZAP), which takes place once a year at the beginning of March.</p>
               </div>
 
-              <aside class="hero-panel">
-                <div class="panel-card panel-card-accent">
-                  <p class="panel-kicker">This app includes</p>
-                  <h2>Short theory, guided practice, personal plans</h2>
-                  <p id="focus-topic-description"></p>
-                </div>
+              <div class="admission-grid">
+                <article class="admission-card admission-card-wide">
+                  <h3 id="admission-zap-title">Zentrale Aufnahmeprüfung (ZAP)</h3>
+                  <p id="admission-zap-text">The ZAP is the central entrance exam for learners who want to attend a Gymnasium in the Canton of Zurich.</p>
+                  <div class="admission-links">
+                    <button class="secondary-button" id="admission-zap-link" type="button">Open ZAP information</button>
+                    <button class="secondary-button" id="admission-brochure-link" type="button">Open brochure PDF</button>
+                  </div>
+                  <p class="admission-note" id="admission-note">Orientation events are announced directly on the websites of the cantonal schools.</p>
+                </article>
 
-                <div class="panel-card">
-                  <p class="panel-kicker">Current learner</p>
-                  <p class="learner-note" id="landing-learner-note">Create an account or log in to save your personal progress.</p>
-                </div>
-              </aside>
-            </div>
-          </section>
+                <article class="admission-card">
+                  <h3 id="admission-lang-title">Langgymnasium</h3>
+                  <p id="admission-lang-text">Starts after Year 6 of primary school and lasts 6 years.</p>
+                  <button class="text-link" id="admission-lang-link" type="button">More about Langgymnasium</button>
+                </article>
 
-          <section class="section-block">
-            <div class="section-heading">
-              <span class="eyebrow">Main sections</span>
-              <h2>Open the section you need</h2>
-              <p>
-                The first landing explains the app. Each section below opens its own page with its own layout and purpose.
-              </p>
-            </div>
+                <article class="admission-card">
+                  <h3 id="admission-kurz-title">Kurzgymnasium</h3>
+                  <p id="admission-kurz-text">Starts after Year 2 or 3 of secondary school, or after Year 2 of Langgymnasium, and lasts 4 years.</p>
+                  <button class="text-link" id="admission-kurz-link" type="button">More about Kurzgymnasium</button>
+                </article>
 
-            <div class="landing-grid">
-              <article class="landing-card">
-                <p class="panel-kicker">Learning Library</p>
-                <h3>Topics page</h3>
-                <p>Browse school topics, read short theory, and solve tasks from easy to hard.</p>
-                <button class="primary-button nav-link" data-view-target="topics" type="button">Go to topics</button>
-              </article>
+                <article class="admission-card">
+                  <h3 id="admission-unter-title">Untergymnasium</h3>
+                  <p id="admission-unter-text">The first two years of Langgymnasium are called Untergymnasium. In most cases, learners then transfer to the upper level without another exam.</p>
+                  <button class="text-link" id="admission-unter-link" type="button">Open Gymnasium overview</button>
+                </article>
+              </div>
+            </section>
 
-              <article class="landing-card">
-                <p class="panel-kicker">Personal Plan</p>
-                <h3>My plan page</h3>
-                <p>Build a personal study plan, choose topics, and view your current progress.</p>
-                <button class="primary-button nav-link" data-view-target="plan" type="button">Go to my plan</button>
-              </article>
+            <section class="section-block cta-block">
+              <div class="section-heading section-heading-compact">
+                <h2 id="home-cta-title">Start practising the math tasks that matter most</h2>
+                <p id="home-cta-text">Choose your exam path and begin with typical entrance exam exercises.</p>
+              </div>
+              <div class="hero-actions cta-actions">
+                <button class="primary-button" type="button" data-home-path="lang" id="home-cta-lang-button">Choose Langgymnasium</button>
+                <button class="secondary-button" type="button" data-home-path="kurz" id="home-cta-kurz-button">Choose Kurzgymnasium</button>
+              </div>
+            </section>
 
-              <article class="landing-card">
-                <p class="panel-kicker">Gymi Preparation</p>
-                <h3>Gymi page</h3>
-                <p>Open focused Gymi tracks, mock exams, and challenge practice in a separate area.</p>
-                <button class="primary-button nav-link" data-view-target="gymi" type="button">Go to Gymi</button>
-              </article>
-            </div>
-          </section>
+            <footer class="site-footer-minimal">
+              <p id="home-footer-tagline">Math practice for Zurich Gymnasium entrance exam preparation</p>
+              <div class="site-footer-links">
+                <a href="#" id="home-footer-official">Official exam information</a>
+                <a href="#" id="home-footer-privacy">Privacy</a>
+                <a href="#" id="home-footer-contact">Contact</a>
+              </div>
+            </footer>
+          </div>
         </section>
 
         <section class="view" data-view="topics">
@@ -156,10 +218,14 @@
             <div class="section-heading">
               <span class="eyebrow">Learning library</span>
               <h2>Choose a topic and start learning</h2>
-              <p>
-                This page is only for exploring topics, reading theory, and practicing one idea at a time.
-              </p>
+              <p>This page is only for exploring topics, reading theory, and practicing one idea at a time.</p>
             </div>
+
+            <nav class="content-nav" aria-label="Topic navigation">
+              <a href="#" class="content-nav-link" data-quick-nav="algebra">Algebra</a>
+              <a href="#" class="content-nav-link" data-quick-nav="geometry">Geometry</a>
+              <a href="#" class="content-nav-link" data-quick-nav="tasks">Tasks</a>
+            </nav>
 
             <div class="topics-toolbar">
               <div class="filter-group" id="grade-filters"></div>
@@ -182,25 +248,29 @@
                 <p class="topic-summary" id="selected-topic-summary"></p>
                 <div class="feedback-banner" id="topic-feedback" aria-live="polite">Pick a topic to see your next step.</div>
 
-                <section class="theory-card">
+                <section class="theory-card theory">
                   <h4>What to remember</h4>
                   <ul id="selected-topic-theory"></ul>
                 </section>
 
+                <section class="formula" id="topic-formula"></section>
+
                 <section class="practice-section">
-                  <div class="practice-column">
+                  <div class="practice-column example">
                     <h4>Start here</h4>
                     <ol id="practice-easy"></ol>
                   </div>
-                  <div class="practice-column">
+                  <div class="practice-column solution">
                     <h4>Keep going</h4>
                     <ol id="practice-medium"></ol>
                   </div>
-                  <div class="practice-column">
+                  <div class="practice-column solution">
                     <h4>Big challenge</h4>
                     <ol id="practice-hard"></ol>
                   </div>
                 </section>
+
+                <section class="topic-canvas" id="topic-canvas" hidden aria-live="polite"></section>
               </article>
             </div>
           </section>
@@ -211,9 +281,7 @@
             <div class="section-heading">
               <span class="eyebrow">Personal planning</span>
               <h2>Build and follow your own learning plan</h2>
-              <p>
-                This page is for selecting goals, choosing study rhythm, and checking saved progress.
-              </p>
+              <p>This page is for selecting goals, choosing study rhythm, and checking saved progress.</p>
             </div>
 
             <div class="builder-grid">
@@ -294,9 +362,7 @@
             <div class="section-heading">
               <span class="eyebrow">Gymi preparation</span>
               <h2>Open a Gymi section when you want a challenge</h2>
-              <p>
-                This page contains separate Gymi tracks and mock exams instead of mixing them into the normal learning flow.
-              </p>
+              <p>This page contains separate Gymi tracks and mock exams instead of mixing them into the normal learning flow.</p>
             </div>
 
             <div class="gymi-grid" id="gymi-track-grid"></div>
@@ -305,7 +371,7 @@
               <div class="mock-exam-header">
                 <div>
                   <p class="viewer-label">Mock exam</p>
-                  <h3 id="mock-exam-title">Diagnostic Test: Kurz Gymnasium</h3>
+                  <h3 id="mock-exam-title">Loading...</h3>
                 </div>
                 <button class="secondary-button" id="switch-exam-button" type="button">Next mock exam</button>
               </div>
@@ -321,14 +387,12 @@
             <div class="section-heading">
               <span class="eyebrow">User profile</span>
               <h2>Manage your personal profile</h2>
-              <p>
-                Edit your visible profile details here. This page keeps profile information in one clear place.
-              </p>
+              <p>Edit your visible profile details here. This page keeps profile information in one clear place.</p>
             </div>
 
             <div class="profile-grid">
               <aside class="builder-card profile-preview-card">
-                <div class="profile-avatar-large" id="profile-avatar-large">
+                <div class="profile-avatar-large">
                   <img id="profile-avatar-image" alt="Profile avatar" hidden />
                   <span id="profile-avatar-initials">MG</span>
                 </div>
@@ -375,6 +439,7 @@
 
                 <p class="auth-message learner-note" id="profile-message">Your profile settings help make the app feel personal.</p>
               </form>
+
               <section class="builder-card settings-actions-card">
                 <h3 id="profile-security-title">Security settings</h3>
                 <div class="settings-action-list">
@@ -383,7 +448,7 @@
                 </div>
                 <p class="auth-message learner-note" id="profile-security-message">Open a separate page to manage secure account changes.</p>
               </section>
-            </section>
+            </div>
           </section>
         </section>
 
@@ -466,9 +531,7 @@
             <div class="section-heading">
               <span class="eyebrow">Account access</span>
               <h2>Create your account or log in</h2>
-              <p>
-                After a successful sign up or log in, this page closes and your avatar appears in the top-right corner.
-              </p>
+              <p>After a successful sign up or log in, this page closes and your avatar appears in the top-right corner.</p>
             </div>
 
             <div class="auth-page-grid">
@@ -488,7 +551,7 @@
                 </div>
 
                 <form id="auth-form-page" class="auth-form">
-                  <div id="auth-display-name-field-page">
+                  <div id="auth-display-name-field-page" hidden>
                     <label class="learner-label" for="auth-display-name-input-page">What should we call you?</label>
                     <input id="auth-display-name-input-page" class="learner-input" type="text" maxlength="40" placeholder="Type your name" />
                   </div>
@@ -499,7 +562,7 @@
                   <label class="learner-label" for="auth-password-input-page">Password</label>
                   <input id="auth-password-input-page" class="learner-input" type="password" minlength="8" maxlength="128" placeholder="At least 8 characters" autocomplete="current-password" />
 
-                  <div id="auth-grade-field-page">
+                  <div id="auth-grade-field-page" hidden>
                     <label class="learner-label" for="auth-grade-select-page">Which level fits you best?</label>
                     <select id="auth-grade-select-page" class="learner-input">
                       <option value="3-4">Grades 3-4</option>
@@ -543,6 +606,6 @@
       </main>
     </div>
 
-    <script type="module" src="./dist/client/app.js"></script>
+    <script type="module" src="./dist/client/app.js?v=20260416-2"></script>
   </body>
 </html>

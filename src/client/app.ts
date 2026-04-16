@@ -1,4 +1,6 @@
 import { seedGymiTracks, seedMockExams, seedTopics } from "../content/seed-content.js";
+import { formatMathText } from "./math-text.js";
+import { SimplifyTermsCanvas } from "./simplify-terms-canvas.js";
 
 type Language = "en" | "de";
 type ViewName = "home" | "topics" | "plan" | "gymi" | "profile" | "auth" | "change-email" | "change-password";
@@ -42,6 +44,7 @@ interface TopicContent {
   category: string;
   duration: string;
   summary: string;
+  formula: string;
   theory: string[];
   practice: {
     easy: string[];
@@ -84,6 +87,22 @@ interface ProfileState {
   photoUrl: string;
   gradeBand: string;
   about: string;
+}
+
+interface ApiStudyPlan {
+  student_id: string;
+  goal?: string;
+  grade_band?: string;
+  intensity?: string;
+  topic_slugs?: string[];
+}
+
+interface ApiProgressEntry {
+  student_id: string;
+  topic_slug: string;
+  status: "started" | "practicing" | "completed";
+  score: number | null;
+  completed_at: string;
 }
 
 interface TranslationSet {
@@ -265,6 +284,7 @@ type LocalizedTopicOverride = Partial<{
   title: string;
   category: string;
   summary: string;
+  formula: string;
   theory: string[];
   practiceEasy: string[];
   practiceMedium: string[];
@@ -285,46 +305,204 @@ type LocalizedExamOverride = Partial<{
   tasks: string[];
 }>;
 
+const homePageContent = {
+  en: {
+    hero: {
+      title: "Prepare for Zurich Gymnasium math entrance exam tasks",
+      subtitle:
+        "Practice the most common mathematics task types for the Zurich entrance exam to Langgymnasium and Kurzgymnasium. Learn with step-by-step explanations, hints, and similar examples.",
+      primaryButton: "Start with Langgymnasium",
+      secondaryButton: "Start with Kurzgymnasium",
+      infoCard: [
+        "Written entrance exam",
+        "German + Mathematics",
+        "Math counts for 50% of the exam grade"
+      ]
+    },
+    benefits: [
+      {
+        title: "Train typical math task types",
+        text: "Practise common entrance exam patterns such as simplifying expressions, equations, fractions, roots, and geometry."
+      },
+      {
+        title: "Learn from mistakes",
+        text: "If your answer is wrong, the app explains the solution step by step and gives you a similar example."
+      },
+      {
+        title: "Choose the right exam path",
+        text: "Follow a task path designed for Langgymnasium or Kurzgymnasium and focus on the right level."
+      }
+    ],
+    examCards: {
+      lang: {
+        title: "Langgymnasium",
+        label: "For pupils in 6th grade of primary school",
+        text: "The Zurich entrance exam for Langgymnasium is for pupils in the 6th year of primary school. The written exam includes German and Mathematics. Mathematics counts for half of the exam grade.",
+        button: "Start Langgymnasium math practice"
+      },
+      kurz: {
+        title: "Kurzgymnasium",
+        label: "For students in the 2nd or 3rd year of secondary school",
+        text: "The Zurich entrance exam for Kurzgymnasium is for students in the 2nd or 3rd year of secondary school. The written exam includes German and Mathematics. Mathematics counts for half of the exam grade.",
+        button: "Start Kurzgymnasium math practice"
+      }
+    },
+    admission: {
+      eyebrow: "Admission in the Canton of Zurich",
+      title: "How entry to a Zurich Gymnasium works",
+      text:
+        "In the Canton of Zurich, entry to a Gymnasium normally requires passing the Zentrale Aufnahmeprüfung (ZAP), also called the Gymiprüfung. The exam takes place once a year at the beginning of March.",
+      zapTitle: "Zentrale Aufnahmeprüfung (ZAP)",
+      zapText:
+        "In this app you can go straight to the exam paths and math practice for Langgymnasium and Kurzgymnasium.",
+      zapLink: "Open exam paths",
+      brochureLink: "Open topic overview",
+      note: "This home section gives a short overview of the Zurich Gymnasium route and links only to pages inside this web app.",
+      langTitle: "Langgymnasium",
+      langText: "The Langgymnasium starts after Year 6 of primary school and lasts 6 years.",
+      langLink: "More about Langgymnasium",
+      kurzTitle: "Kurzgymnasium",
+      kurzText:
+        "The Kurzgymnasium starts after Year 2 or 3 of secondary school, or after Year 2 of Langgymnasium, and lasts 4 years.",
+      kurzLink: "More about Kurzgymnasium",
+      unterTitle: "Untergymnasium",
+      unterText:
+        "The first two years of the Langgymnasium are called Untergymnasium. In most cases, learners move on to the upper level without another entrance exam.",
+      unterLink: "Open Gymnasium overview"
+    },
+    cta: {
+      title: "Start practising the math tasks that matter most",
+      text: "Choose your exam path and begin with typical entrance exam exercises, guided solutions, and targeted practice.",
+      langButton: "Choose Langgymnasium",
+      kurzButton: "Choose Kurzgymnasium"
+    },
+    footer: {
+      tagline: "Math practice for Zurich Gymnasium entrance exam preparation",
+      officialInfo: "Official exam information",
+      privacy: "Privacy",
+      contact: "Contact"
+    }
+  },
+  de: {
+    hero: {
+      title: "Bereite dich auf Mathematikaufgaben der Zürcher Gymi-Aufnahmeprüfung vor",
+      subtitle:
+        "Übe die häufigsten Mathematik-Aufgabentypen für die Zürcher Aufnahmeprüfung ins Langgymnasium und Kurzgymnasium. Lerne mit Schritt-für-Schritt-Erklärungen, Hinweisen und ähnlichen Beispielen.",
+      primaryButton: "Mit Langgymnasium starten",
+      secondaryButton: "Mit Kurzgymnasium starten",
+      infoCard: [
+        "Schriftliche Aufnahmeprüfung",
+        "Deutsch + Mathematik",
+        "Mathematik zählt 50% der Prüfungsnote"
+      ]
+    },
+    benefits: [
+      {
+        title: "Typische Mathematik-Aufgaben trainieren",
+        text: "Übe typische Aufgabentypen der Aufnahmeprüfung wie Terme vereinfachen, Gleichungen, Brüche, Wurzeln und Geometrie."
+      },
+      {
+        title: "Aus Fehlern lernen",
+        text: "Wenn deine Antwort falsch ist, erklärt die App die Lösung Schritt für Schritt und gibt dir ein ähnliches Beispiel."
+      },
+      {
+        title: "Den richtigen Prüfungsweg wählen",
+        text: "Wähle einen Aufgabenpfad für Langgymnasium oder Kurzgymnasium und übe auf dem passenden Niveau."
+      }
+    ],
+    examCards: {
+      lang: {
+        title: "Langgymnasium",
+        label: "Für Schülerinnen und Schüler der 6. Primarklasse",
+        text: "Die Zürcher Aufnahmeprüfung ins Langgymnasium richtet sich an Schülerinnen und Schüler der 6. Primarklasse. Die schriftliche Prüfung umfasst Deutsch und Mathematik. Mathematik zählt zur Hälfte der Prüfungsnote.",
+        button: "Mit Langgymnasium-Mathe starten"
+      },
+      kurz: {
+        title: "Kurzgymnasium",
+        label: "Für Schülerinnen und Schüler der 2. oder 3. Sekundarklasse",
+        text: "Die Zürcher Aufnahmeprüfung ins Kurzgymnasium richtet sich an Schülerinnen und Schüler der 2. oder 3. Sekundarklasse. Die schriftliche Prüfung umfasst Deutsch und Mathematik. Mathematik zählt zur Hälfte der Prüfungsnote.",
+        button: "Mit Kurzgymnasium-Mathe starten"
+      }
+    },
+    admission: {
+      eyebrow: "Aufnahme im Kanton Zürich",
+      title: "So funktioniert die Aufnahme ans Gymnasium",
+      text:
+        "Wer im Kanton Zürich ein Gymnasium besuchen will, muss in der Regel die Zentrale Aufnahmeprüfung (ZAP, auch Gymiprüfung genannt) bestehen. Die Prüfung findet einmal pro Jahr Anfang März statt.",
+      zapTitle: "Zentrale Aufnahmeprüfung (ZAP)",
+      zapText:
+        "In dieser App kannst du direkt zu den Prüfungswegen und zur Mathe-Vorbereitung für Langgymnasium und Kurzgymnasium wechseln.",
+      zapLink: "Prüfungswege öffnen",
+      brochureLink: "Themenüberblick öffnen",
+      note:
+        "Dieser Bereich auf der Startseite fasst den Zürcher Gymi-Weg kurz zusammen und verlinkt nur auf Seiten innerhalb dieser WebApp.",
+      langTitle: "Langgymnasium",
+      langText: "Das Langgymnasium schliesst an die 6. Klasse der Primarschule an und dauert 6 Jahre.",
+      langLink: "Mehr zum Langgymnasium",
+      kurzTitle: "Kurzgymnasium",
+      kurzText:
+        "Das Kurzgymnasium schliesst an die 2. oder 3. Klasse der Sekundarschule oder an die 2. Klasse des Langgymnasiums an und dauert 4 Jahre.",
+      kurzLink: "Mehr zum Kurzgymnasium",
+      unterTitle: "Untergymnasium",
+      unterText:
+        "Die ersten beiden Jahre des Langgymnasiums werden als Untergymnasium bezeichnet. In der Regel erfolgt danach der prüfungsfreie Übertritt in die Oberstufe.",
+      unterLink: "Gymnasium-Überblick öffnen"
+    },
+    cta: {
+      title: "Starte mit den Mathematikaufgaben, die wirklich wichtig sind",
+      text: "Wähle deinen Prüfungsweg und beginne mit typischen Aufnahmeprüfungsaufgaben, geführten Lösungen und gezieltem Training.",
+      langButton: "Langgymnasium wählen",
+      kurzButton: "Kurzgymnasium wählen"
+    },
+    footer: {
+      tagline: "Mathematiktraining zur Vorbereitung auf die Zürcher Gymi-Aufnahmeprüfung",
+      officialInfo: "Offizielle Prüfungsinformationen",
+      privacy: "Datenschutz",
+      contact: "Kontakt"
+    }
+  }
+} as const satisfies Record<Language, unknown>;
+
 const translations: Record<Language, TranslationSet> = {
   en: {
-    documentTitle: "MathGinius",
+    documentTitle: "MathGenius",
     navHome: "Home",
     navLearn: "Learn",
     navPlan: "My Plan",
-    navGymi: "Gymi",
+    navGymi: "Exams",
     loginButton: "Log in",
     logoutButton: "Log out",
     avatarProfile: "User profile",
     avatarLogout: "Log out",
-    homeTitle: "Learn with one clear next step, not one crowded first screen",
+    homeTitle: "Choose the right Gymi exam and start without extra steps",
     homeText:
-      "MathGinius helps one learner move through school topics, personal plans, and Gymi preparation in separate clear sections. Start on the landing page, open one section, and focus only on what matters now.",
-    homeOpenTopics: "Open learning topics",
+      "MathGenius is focused here on only two paths: Kurzgymi-Prufung and Langgymi-Prufung. Open the right exam preparation directly and work without distracting extra sections.",
+    homeOpenTopics: "Open exams",
     homeCreateAccount: "Create account",
-    statsTopics: "topics to explore",
-    statsTasks: "practice tasks",
-    statsSections: "main app sections",
-    appIncludes: "This app includes",
-    appIncludesTitle: "Short theory, guided practice, personal plans",
-    appIncludesText: "",
+    statsTopics: "exams",
+    statsTasks: "mock exams",
+    statsSections: "exam paths",
+    appIncludes: "Exam focus",
+    appIncludesTitle: "Two clear exam areas instead of many scattered pages",
+    appIncludesText: "Choose Kurzgymi-Prufung or Langgymi-Prufung and go straight into the matching preparation.",
     currentLearner: "Current learner",
     currentLearnerSignedOut: "Create an account or log in to save your personal progress.",
-    currentLearnerSignedIn: "is signed in. Open your plan, learning topics, or profile from the navigation.",
-    mainSections: "Main sections",
-    openSectionTitle: "Open the section you need",
-    openSectionText: "The first landing explains the app. Each section below opens its own page with its own layout and purpose.",
-    learnCardKicker: "Learning Library",
-    learnCardTitle: "Topics page",
-    learnCardText: "Browse school topics, read short theory, and solve tasks from easy to hard.",
-    learnCardButton: "Go to topics",
-    planCardKicker: "Personal Plan",
-    planCardTitle: "My plan page",
-    planCardText: "Build a personal study plan, choose topics, and view your current progress.",
-    planCardButton: "Go to my plan",
-    gymiCardKicker: "Gymi Preparation",
-    gymiCardTitle: "Gymi page",
-    gymiCardText: "Open focused Gymi tracks, mock exams, and challenge practice in a separate area.",
-    gymiCardButton: "Go to Gymi",
+    currentLearnerSignedIn: "is signed in. Open one of the two exam areas whenever you want to continue.",
+    mainSections: "Exam areas",
+    openSectionTitle: "Choose your Gymi exam",
+    openSectionText: "Only two sections remain. Pick the matching exam and start directly.",
+    learnCardKicker: "Exam 1",
+    learnCardTitle: "Kurzgymi-Prufung",
+    learnCardText: "For later admission with a focus on speed, calculations, word problems, and entrance-style tasks.",
+    learnCardButton: "Open Kurzgymi",
+    planCardKicker: "Exam 2",
+    planCardTitle: "Langgymi-Prufung",
+    planCardText: "For early preparation with a focus on foundations, accuracy, and calm step-by-step solving.",
+    planCardButton: "Open Langgymi",
+    gymiCardKicker: "Exam Preparation",
+    gymiCardTitle: "Exam area",
+    gymiCardText: "Open the two focused Gymi exam tracks and their matching mock exams.",
+    gymiCardButton: "Open exams",
     topicsEyebrow: "Learning library",
     topicsTitle: "Choose a topic and start learning",
     topicsText: "This page is only for exploring topics, reading theory, and practicing one idea at a time.",
@@ -355,9 +533,9 @@ const translations: Record<Language, TranslationSet> = {
     savedPlan: "Saved plan",
     noPlanTopics: "No topics picked yet.",
     gymiEyebrow: "Gymi preparation",
-    gymiTitle: "Open a Gymi section when you want a challenge",
-    gymiText: "This page contains separate Gymi tracks and mock exams instead of mixing them into the normal learning flow.",
-    useTrack: "Use this track",
+    gymiTitle: "Choose between Kurzgymi-Prufung and Langgymi-Prufung",
+    gymiText: "This page contains only the two Gymi exam sections and their matching mock exams.",
+    useTrack: "Open this exam",
     mockExam: "Mock exam",
     nextMockExam: "Next mock exam",
     profileEyebrow: "User profile",
@@ -462,44 +640,44 @@ const translations: Record<Language, TranslationSet> = {
     languageSwitcherLabel: "Language switcher"
   },
   de: {
-    documentTitle: "MathGinius",
+    documentTitle: "MathGenius",
     navHome: "Start",
     navLearn: "Lernen",
     navPlan: "Mein Plan",
-    navGymi: "Gymi",
+    navGymi: "Prufungen",
     loginButton: "Anmelden",
     logoutButton: "Abmelden",
     avatarProfile: "Benutzerprofil",
     avatarLogout: "Abmelden",
-    homeTitle: "Lerne mit einem klaren nächsten Schritt statt mit einer überladenen ersten Seite",
+    homeTitle: "Wahle die passende Gymi-Prufung und starte ohne Umwege",
     homeText:
-      "MathGinius hilft einer lernenden Person, Schulthemen, persönliche Pläne und Gymi-Vorbereitung in klar getrennten Bereichen zu nutzen. Starte auf der Landingpage, öffne einen Bereich und konzentriere dich nur auf das, was jetzt wichtig ist.",
-    homeOpenTopics: "Lernthemen öffnen",
+      "MathGenius konzentriert sich hier nur auf zwei Wege: Kurzgymi-Prufung und Langgymi-Prufung. Offne direkt die passende Prufungsvorbereitung und arbeite ohne ablenkende Zusatzbereiche.",
+    homeOpenTopics: "Prufungen offnen",
     homeCreateAccount: "Konto erstellen",
-    statsTopics: "Themen zum Entdecken",
-    statsTasks: "Übungsaufgaben",
-    statsSections: "Hauptbereiche der App",
-    appIncludes: "Diese App enthält",
-    appIncludesTitle: "Kurze Theorie, geführte Übung, persönliche Pläne",
-    appIncludesText: "",
+    statsTopics: "Prufungen",
+    statsTasks: "Mock Exams",
+    statsSections: "Prufungswege",
+    appIncludes: "Prufungsfokus",
+    appIncludesTitle: "Zwei klare Bereiche statt vieler verstreuter Seiten",
+    appIncludesText: "Wahle Kurzgymi-Prufung oder Langgymi-Prufung und gehe direkt in die passende Vorbereitung.",
     currentLearner: "Aktuelle lernende Person",
     currentLearnerSignedOut: "Erstelle ein Konto oder melde dich an, um deinen persönlichen Fortschritt zu speichern.",
-    currentLearnerSignedIn: "ist angemeldet. Öffne deinen Plan, Lernthemen oder dein Profil über die Navigation.",
-    mainSections: "Hauptbereiche",
-    openSectionTitle: "Öffne den Bereich, den du brauchst",
-    openSectionText: "Die erste Landingpage erklärt die App. Jeder Bereich unten öffnet seine eigene Seite mit eigener Struktur und eigenem Zweck.",
-    learnCardKicker: "Lernbibliothek",
-    learnCardTitle: "Themenseite",
-    learnCardText: "Durchsuche Schulthemen, lies kurze Theorie und löse Aufgaben von leicht bis schwer.",
-    learnCardButton: "Zu den Themen",
-    planCardKicker: "Persönlicher Plan",
-    planCardTitle: "Mein-Plan-Seite",
-    planCardText: "Erstelle einen persönlichen Lernplan, wähle Themen und sieh deinen aktuellen Fortschritt.",
-    planCardButton: "Zu meinem Plan",
-    gymiCardKicker: "Gymi-Vorbereitung",
-    gymiCardTitle: "Gymi-Seite",
-    gymiCardText: "Öffne gezielte Gymi-Tracks, Mock Exams und anspruchsvolle Übungen in einem eigenen Bereich.",
-    gymiCardButton: "Zu Gymi",
+    currentLearnerSignedIn: "ist angemeldet. Offne einen der zwei Prufungsbereiche, wenn du weitermachen mochtest.",
+    mainSections: "Prufungsbereiche",
+    openSectionTitle: "Wahle deine Gymi-Prufung",
+    openSectionText: "Es bleiben nur zwei Bereiche. Wahle direkt die passende Prufung und starte ohne zusatzliche Navigation.",
+    learnCardKicker: "Prufung 1",
+    learnCardTitle: "Kurzgymi-Prufung",
+    learnCardText: "Fur den spateren Eintritt mit Fokus auf Tempo, Rechnen, Sachaufgaben und prufungsnahe Aufgaben.",
+    learnCardButton: "Kurzgymi offnen",
+    planCardKicker: "Prufung 2",
+    planCardTitle: "Langgymi-Prufung",
+    planCardText: "Fur fruhe Vorbereitung mit Fokus auf Grundlagen, Genauigkeit und ruhige, klare Losungswege.",
+    planCardButton: "Langgymi offnen",
+    gymiCardKicker: "Prufungsvorbereitung",
+    gymiCardTitle: "Prufungsbereich",
+    gymiCardText: "Offne die zwei fokussierten Gymi-Prufungen und ihre passenden Mock Exams.",
+    gymiCardButton: "Prufungen offnen",
     topicsEyebrow: "Lernbibliothek",
     topicsTitle: "Wähle ein Thema und starte direkt",
     topicsText: "Diese Seite ist nur für Themen, Theorie und Übungen zu einer Idee nach der anderen.",
@@ -530,9 +708,9 @@ const translations: Record<Language, TranslationSet> = {
     savedPlan: "Gespeicherter Plan",
     noPlanTopics: "Noch keine Themen ausgewählt.",
     gymiEyebrow: "Gymi-Vorbereitung",
-    gymiTitle: "Öffne einen Gymi-Bereich, wenn du eine Herausforderung willst",
-    gymiText: "Diese Seite enthält getrennte Gymi-Tracks und Mock Exams statt sie in den normalen Lernfluss zu mischen.",
-    useTrack: "Diesen Track nutzen",
+    gymiTitle: "Wahle zwischen Kurzgymi-Prufung und Langgymi-Prufung",
+    gymiText: "Diese Seite enthalt nur die zwei Gymi-Prufungsbereiche und ihre passenden Mock Exams.",
+    useTrack: "Diese Prufung offnen",
     mockExam: "Mock Exam",
     nextMockExam: "Nächstes Mock Exam",
     profileEyebrow: "Benutzerprofil",
@@ -639,10 +817,34 @@ const translations: Record<Language, TranslationSet> = {
 };
 
 const germanTopicContent: Record<string, LocalizedTopicOverride> = {
+  "simplify-terms": {
+    title: "Vereinfache die Terme so weit wie möglich",
+    category: "Algebra",
+    summary: "Ein fokussierter Kurzgymi-Canvas mit vier Aufgaben, Antwortprüfung, Hinweisen und ausgearbeiteten Lösungen.",
+    formula: "Klammern öffnen -> gleichartige Terme zusammenfassen -> Faktoren kürzen -> erst dann vollständig vereinfachen",
+    theory: [
+      "Öffne Klammern sorgfältig und beachte jedes Vorzeichen, bevor du gleichartige Terme zusammenfasst.",
+      "Bei Produkten multiplizierst du zuerst die Zahlen und fasst gleiche Variablen zu Potenzen zusammen.",
+      "Bei Brüchen und Wurzeln vereinfachst du zuerst die Struktur und kürzt nur echte gemeinsame Faktoren."
+    ],
+    practiceEasy: [
+      "Multipliziere Klammern aus und fasse gleichartige Terme zusammen.",
+      "Multipliziere Faktoren und schreibe wiederholte Variablen als Potenzen."
+    ],
+    practiceMedium: [
+      "Vereinfache Bruchterme zuerst vor dem Ausmultiplizieren.",
+      "Prüfe, ob dein Term wirklich vollständig reduziert ist."
+    ],
+    practiceHard: [
+      "Fasse Wurzeln erst nach dem Vereinfachen des Ausdrucks unter der Wurzel zusammen.",
+      "Nutze den Canvas und arbeite alle vier Aufgaben von einfach bis schwer durch."
+    ]
+  },
   fractions: {
     title: "Brüche und Prozente",
     category: "Zahlen",
     summary: "Brüche, Prozente und ihren Zusammenhang durch Bilder, Vergleiche und alltagsnahe Aufgaben verstehen.",
+    formula: "Prozent = Bruch x 100; Teil = Prozent x Ganzes",
     theory: [
       "Ein Bruch zeigt, in wie viele gleiche Teile ein Ganzes geteilt wird und wie viele Teile gemeint sind.",
       "Um einen Bruch in Prozent umzuwandeln, wandle ihn zuerst in eine Dezimalzahl um und multipliziere dann mit 100.",
@@ -666,6 +868,7 @@ const germanTopicContent: Record<string, LocalizedTopicOverride> = {
     title: "Gleichungen und Unbekannte",
     category: "Algebra",
     summary: "Erste lineare Gleichungen, die Bedeutung einer Unbekannten und das Prüfen durch Einsetzen.",
+    formula: "x + a = b -> x = b - a",
     theory: [
       "Eine Gleichung ist eine Gleichheit mit einer unbekannten Zahl, die gefunden werden muss.",
       "Du darfst auf beiden Seiten dieselben Rechenschritte ausführen, ohne die Gleichheit zu verändern.",
@@ -685,6 +888,7 @@ const germanTopicContent: Record<string, LocalizedTopicOverride> = {
     title: "Umfang, Fläche und Formen",
     category: "Geometrie",
     summary: "Formen messen, mit Längen- und Flächeneinheiten arbeiten und von Zeichnungen zu Formeln kommen.",
+    formula: "Umfang = Summe aller Seiten; Fläche Rechteck = Länge x Breite",
     theory: [
       "Der Umfang ist die Summe aller Seitenlängen einer Form.",
       "Die Fläche zeigt, wie viel Platz eine Form auf einer ebenen Fläche bedeckt.",
@@ -707,40 +911,40 @@ const germanTopicContent: Record<string, LocalizedTopicOverride> = {
 
 const germanTrackContent: Record<string, LocalizedTrackOverride> = {
   kurz: {
-    title: "Kurzgymnasium",
-    audience: "Für den späteren Eintritt mit Fokus auf Tempo, Rechnen und Sachaufgaben.",
+    title: "Kurzgymi-Prufung",
+    audience: "Für Lernende aus der Sekundarstufe mit Fokus auf Algebra, Tempo und mehrschrittige Sachaufgaben.",
     description:
-      "Diagnostik, gezielte Übungssets, Wochenpläne und Mock Exams rund um aufnahmeähnliche Mathematik.",
-    pillars: ["Tempo", "Sachaufgaben", "Prüfungsstrategie"],
-    diagnostics: "Nutze diesen Track, wenn du schnelle Diagnosen und kurze Prüfungssimulationen willst."
+      "Schnellere aufnahmeähnliche Vorbereitung mit Termen, Verhältnissen, Prozenten und klarem Prüfungsrhythmus.",
+    pillars: ["Algebra", "Tempo", "Prüfungsstrategie"],
+    diagnostics: "Nutze diesen Track, wenn du gezielt fürs Kurzgymi mit anspruchsvolleren Rechenwegen üben willst."
   },
   lang: {
-    title: "Langgymnasium",
-    audience: "Für frühe Vorbereitung mit Fokus auf Grundlagen und Genauigkeit.",
+    title: "Langgymi-Prufung",
+    audience: "Für die frühe Vorbereitung mit Fokus auf Zahlverständnis, Geometrie und ruhige, genaue Lösungen.",
     description:
-      "Schrittweise Vorbereitung in Arithmetik, Brüchen, Geometrie und wiederkehrenden Prüfungsaufgaben.",
-    pillars: ["Grundlagen", "Genauigkeit", "Routine"],
-    diagnostics: "Nutze diesen Track, wenn du Grundlagen sicher aufbauen und regelmäßig trainieren willst."
+      "Schrittweise Vorbereitung in Arithmetik, Brüchen und Geometrie mit gut lesbaren, sauberen Lösungswegen.",
+    pillars: ["Grundlagen", "Geometrie", "Genauigkeit"],
+    diagnostics: "Nutze diesen Track, wenn du fürs Langgymi erst starke Grundlagen und Sicherheit aufbauen möchtest."
   }
 };
 
 const germanExamContent: Record<string, LocalizedExamOverride> = {
   "kurz-diagnostic": {
-    title: "Diagnostischer Test: Kurzgymnasium",
-    description: "Ein erster Mock Exam mit Rechnen, Brüchen, Sachaufgaben und Lösungsstrategie.",
+    title: "Mock Exam: Kurzgymi-Prufung",
+    description: "Ein kompaktes Kurzgymi-Set mit Algebra, Verhältnissen und Prozentaufgaben unter leichtem Zeitdruck.",
     tasks: [
-      "In einer Klasse sind 24 Schülerinnen und Schüler. 3/8 der Klasse lernen Musik. Wie viele Kinder sind das?",
-      "Vereinfache das Verhältnis 18:30 und erkläre, was es bedeutet.",
-      "Löse die Preisaufgabe: Ein Artikel kostete 120 CHF, bekam 15% Rabatt und danach kam eine Servicegebühr von 6 CHF dazu."
+      "Vereinfache den Term: 3(2x - 5) - 2(x + 4).",
+      "Eine Karte hat den Maßstab 1:25 000. Welche echte Strecke entsprechen 8 cm?",
+      "Eine Jacke kostet 180 CHF. Sie wird um 15% reduziert und danach kommt eine Liefergebühr von 7.70 CHF dazu. Wie hoch ist der Endpreis?"
     ]
   },
   "lang-foundation": {
-    title: "Mock Exam: Grundlagen Langgymnasium",
-    description: "Eine Folge von Aufgaben zu Grundfertigkeiten, genauem Lesen und klaren schriftlichen Lösungen.",
+    title: "Mock Exam: Langgymi-Prufung",
+    description: "Ein ruhigeres Langgymi-Set mit Brüchen, Geometrie und sauberem Schritt-für-Schritt-Rechnen.",
     tasks: [
-      "Vergleiche die Brüche 5/6 und 7/9, ohne sie in Dezimalzahlen umzuwandeln.",
-      "Berechne die Fläche eines Rechtecks mit Länge 14 cm und Breite 9 cm.",
-      "Schreibe einen Term und berechne ihn: Addiere ein Viertel von 18 zu 18 und ziehe dann 5 ab."
+      "Vergleiche die Brüche 3/4 und 5/8, ohne sie in Dezimalzahlen umzuwandeln.",
+      "Ein Rechteck ist 12 cm lang und 7 cm breit. Berechne Umfang und Fläche.",
+      "Schreibe den Term und berechne: Nimm ein Drittel von 24, addiere 18 und ziehe dann 5 ab."
     ]
   }
 };
@@ -753,12 +957,12 @@ const trackFallbackDetails: Record<
   }
 > = {
   kurz: {
-    pillars: ["Speed", "Word problems", "Exam strategy"],
-    diagnostics: "Use this track when you want quick diagnosis, timed drills, and entrance-style challenge work."
+    pillars: ["Algebra", "Word problems", "Exam strategy"],
+    diagnostics: "Use this track for tougher Kurzgymi-style tasks with more algebra, ratios, and timed decisions."
   },
   lang: {
-    pillars: ["Foundations", "Accuracy", "Routine"],
-    diagnostics: "Use this track when you want steady basics practice and confidence before harder Gymi tasks."
+    pillars: ["Foundations", "Geometry", "Accuracy"],
+    diagnostics: "Use this track for Langgymi-style basics, calmer pacing, and careful written solutions."
   }
 };
 
@@ -767,8 +971,11 @@ const storageKeys = {
   plan: "mathginius-study-plan",
   authToken: "mathginius-auth-token",
   account: "mathginius-account",
-  language: "mathginius-language"
+  language: "mathginius-language-v2"
 } as const;
+
+const initialAuthToken = loadAuthToken();
+const initialAccount = loadAccount();
 
 function query<T extends Element>(selector: string): T {
   const node = document.querySelector(selector);
@@ -778,24 +985,35 @@ function query<T extends Element>(selector: string): T {
   return node as T;
 }
 
+function queryOptional<T extends Element>(selector: string): T | null {
+  const node = document.querySelector(selector);
+  return node instanceof Element ? (node as T) : null;
+}
+
 function queryAll<T extends Element>(selector: string): T[] {
   return Array.from(document.querySelectorAll(selector)) as T[];
 }
 
 const dom = {
   html: document.documentElement,
-  navHome: query<HTMLButtonElement>('[data-view-target="home"]'),
-  navTopics: query<HTMLButtonElement>('[data-view-target="topics"]'),
-  navPlan: query<HTMLButtonElement>('[data-view-target="plan"]'),
-  navGymi: query<HTMLButtonElement>('[data-view-target="gymi"]'),
+  navHome: queryOptional<HTMLButtonElement>('[data-view-target="home"]'),
+  navTopics: queryOptional<HTMLButtonElement>('[data-view-target="topics"]'),
+  navPlan: queryOptional<HTMLButtonElement>('[data-view-target="plan"]'),
+  navGymi: queryOptional<HTMLButtonElement>('[data-view-target="gymi"]'),
+  navKurzButton: query<HTMLButtonElement>("#nav-kurz-button"),
+  navLangButton: query<HTMLButtonElement>("#nav-lang-button"),
   navLinks: queryAll<HTMLButtonElement>(".nav-link"),
+  quickNavLinks: queryAll<HTMLAnchorElement>(".content-nav-link"),
   views: queryAll<HTMLElement>("[data-view]"),
   homeButton: query<HTMLButtonElement>("#home-button"),
   openAuthButton: query<HTMLButtonElement>("#open-auth-button"),
-  langActiveButton: query<HTMLButtonElement>("#lang-active-button"),
-  langOtherButton: query<HTMLButtonElement>("#lang-other-button"),
+  languageToggleButton: query<HTMLButtonElement>("#language-toggle-button"),
+  languageCurrentLabel: query<HTMLElement>("#language-current-label"),
+  languageFlag: query<HTMLElement>("#csd-flag-container"),
+  languageOptionEnglish: query<HTMLButtonElement>("#language-option-en"),
+  languageOptionGerman: query<HTMLButtonElement>("#language-option-de"),
   languageMenu: query<HTMLElement>("#language-menu"),
-  languageSwitcher: query<HTMLElement>(".language-switcher"),
+  languageSwitcher: query<HTMLElement>("#language-switcher"),
   avatarShell: query<HTMLElement>("#avatar-shell"),
   avatarButton: query<HTMLButtonElement>("#avatar-button"),
   avatarMenu: query<HTMLElement>("#avatar-menu"),
@@ -804,22 +1022,26 @@ const dom = {
   avatarName: query<HTMLElement>("#avatar-name"),
   openProfileButton: query<HTMLButtonElement>("#open-profile-button"),
   avatarLogoutButton: query<HTMLButtonElement>("#avatar-logout-button"),
-  landingLearnerNote: query<HTMLElement>("#landing-learner-note"),
-  topicsCount: query<HTMLElement>("#topics-count"),
-  practiceCount: query<HTMLElement>("#practice-count"),
-  trackCount: query<HTMLElement>("#track-count"),
-  focusTopicDescription: query<HTMLElement>("#focus-topic-description"),
+  openKurzTrackButton: query<HTMLButtonElement>("#open-kurz-track-button"),
+  openLangTrackButton: query<HTMLButtonElement>("#open-lang-track-button"),
+  admissionZapLink: query<HTMLButtonElement>("#admission-zap-link"),
+  admissionBrochureLink: query<HTMLButtonElement>("#admission-brochure-link"),
+  admissionLangLink: query<HTMLButtonElement>("#admission-lang-link"),
+  admissionKurzLink: query<HTMLButtonElement>("#admission-kurz-link"),
+  admissionUnterLink: query<HTMLButtonElement>("#admission-unter-link"),
   gradeFilters: query<HTMLElement>("#grade-filters"),
   categoryFilters: query<HTMLElement>("#category-filters"),
   topicList: query<HTMLElement>("#topic-list"),
   selectedTopicTitle: query<HTMLElement>("#selected-topic-title"),
   selectedTopicMeta: query<HTMLElement>("#selected-topic-meta"),
   selectedTopicSummary: query<HTMLElement>("#selected-topic-summary"),
+  topicFormula: query<HTMLElement>("#topic-formula"),
   topicFeedback: query<HTMLElement>("#topic-feedback"),
   selectedTopicTheory: query<HTMLElement>("#selected-topic-theory"),
   practiceEasy: query<HTMLElement>("#practice-easy"),
   practiceMedium: query<HTMLElement>("#practice-medium"),
   practiceHard: query<HTMLElement>("#practice-hard"),
+  topicCanvas: query<HTMLElement>("#topic-canvas"),
   markCompleteButton: query<HTMLButtonElement>("#mark-complete-button"),
   planTopicOptions: query<HTMLElement>("#plan-topic-options"),
   studyPlanForm: query<HTMLFormElement>("#study-plan-form"),
@@ -944,6 +1166,7 @@ const state: {
   authToken: string;
   account: AccountState | null;
   profile: ProfileState;
+  activeTrackId: string;
 } = {
   currentView: "home",
   authMode: "sign-up",
@@ -953,16 +1176,18 @@ const state: {
   gradeFilter: "all",
   categoryFilter: "all",
   mockExamIndex: 0,
-  completedTopicIds: loadCompletedTopics(),
-  studyPlan: loadStudyPlan(),
-  authToken: loadAuthToken(),
-  account: loadAccount(),
-  profile: createEmptyProfile()
+  completedTopicIds: loadCompletedTopics(initialAccount?.id),
+  studyPlan: loadStudyPlan(initialAccount?.id),
+  authToken: initialAuthToken,
+  account: initialAccount,
+  profile: createEmptyProfile(),
+  activeTrackId: "lang"
 };
 
 let topicRecords: ApiTopic[] = seedTopics.slice();
 let gymiTrackRecords: ApiGymiTrack[] = seedGymiTracks.slice();
 let mockExamRecords: ApiMockExam[] = seedMockExams.slice();
+const simplifyTermsCanvas = new SimplifyTermsCanvas(dom.topicCanvas);
 
 initialize().catch((error: unknown) => {
   console.error(error);
@@ -972,6 +1197,7 @@ async function initialize(): Promise<void> {
   bindEvents();
   await hydrateContentFromApi();
   await hydrateAccountFromApi();
+  await hydrateLearnerDataFromApi();
   loadProfileForCurrentAccount();
   renderAll();
 }
@@ -992,15 +1218,20 @@ function bindEvents(): void {
     }
     navigateTo("auth");
   });
-  dom.langActiveButton.addEventListener("click", () => {
+  dom.languageToggleButton.addEventListener("click", () => {
     const isOpen = !dom.languageMenu.hidden;
     dom.languageMenu.hidden = isOpen;
-    dom.langActiveButton.setAttribute("aria-expanded", String(!isOpen));
+    dom.languageToggleButton.setAttribute("aria-expanded", String(!isOpen));
   });
-  dom.langOtherButton.addEventListener("click", () => {
-    setLanguage(state.language === "en" ? "de" : "en");
+  dom.languageOptionEnglish.addEventListener("click", () => {
+    setLanguage("en");
     dom.languageMenu.hidden = true;
-    dom.langActiveButton.setAttribute("aria-expanded", "false");
+    dom.languageToggleButton.setAttribute("aria-expanded", "false");
+  });
+  dom.languageOptionGerman.addEventListener("click", () => {
+    setLanguage("de");
+    dom.languageMenu.hidden = true;
+    dom.languageToggleButton.setAttribute("aria-expanded", "false");
   });
   dom.avatarButton.addEventListener("click", toggleAvatarMenu);
   dom.openProfileButton.addEventListener("click", () => {
@@ -1011,11 +1242,48 @@ function bindEvents(): void {
     closeAvatarMenu();
     logOut();
   });
+  dom.navKurzButton.addEventListener("click", () => openExamTrack("kurz"));
+  dom.navLangButton.addEventListener("click", () => openExamTrack("lang"));
+  dom.openKurzTrackButton.addEventListener("click", () => openExamTrack("kurz"));
+  dom.openLangTrackButton.addEventListener("click", () => openExamTrack("lang"));
+  queryAll<HTMLButtonElement>("[data-home-path]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const path = button.dataset.homePath;
+      if (path === "lang") {
+        openExamTrack("lang");
+      } else if (path === "kurz") {
+        openExamTrack("kurz");
+      }
+    });
+  });
+  dom.admissionZapLink.addEventListener("click", () => navigateTo("gymi"));
+  dom.admissionBrochureLink.addEventListener("click", () => navigateTo("topics"));
+  dom.admissionLangLink.addEventListener("click", () => openExamTrack("lang"));
+  dom.admissionKurzLink.addEventListener("click", () => openExamTrack("kurz"));
+  dom.admissionUnterLink.addEventListener("click", () => navigateTo("topics"));
+  dom.quickNavLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const target = link.dataset.quickNav;
+      if (target === "algebra") {
+        state.categoryFilter = "Algebra";
+        state.selectedTopicId = "simplify-terms";
+      } else if (target === "geometry") {
+        state.categoryFilter = "Geometry";
+        state.selectedTopicId = "geometry";
+      } else {
+        state.categoryFilter = "Algebra";
+        state.selectedTopicId = "simplify-terms";
+      }
+      navigateTo("topics");
+      renderTopicsArea();
+    });
+  });
 
   document.addEventListener("click", (event) => {
     if (!dom.languageSwitcher.contains(event.target as Node)) {
       dom.languageMenu.hidden = true;
-      dom.langActiveButton.setAttribute("aria-expanded", "false");
+      dom.languageToggleButton.setAttribute("aria-expanded", "false");
     }
     if (!dom.avatarShell.contains(event.target as Node)) {
       closeAvatarMenu();
@@ -1108,7 +1376,10 @@ function bindEvents(): void {
   });
 
   dom.switchExamButton.addEventListener("click", () => {
-    const exams = getMockExams();
+    const exams = getMockExams().filter((exam) => {
+      const source = mockExamRecords.find((record) => record.slug === exam.id);
+      return source?.track_code === state.activeTrackId;
+    });
     if (exams.length === 0) {
       return;
     }
@@ -1160,62 +1431,86 @@ function renderAll(): void {
 
 function renderShell(): void {
   const t = translations[state.language];
-  const topics = getTopics();
 
   document.title = t.documentTitle;
   dom.html.lang = state.language;
   dom.languageSwitcher.setAttribute("aria-label", t.languageSwitcherLabel);
-  dom.langActiveButton.textContent = state.language === "en" ? "🇬🇧" : "🇩🇪";
-  dom.langActiveButton.setAttribute("aria-label", state.language === "en" ? "English" : "Deutsch");
-  dom.langOtherButton.textContent = state.language === "en" ? "🇩🇪" : "🇬🇧";
-  dom.langOtherButton.setAttribute("aria-label", state.language === "en" ? "Deutsch" : "English");
-  dom.navHome.textContent = t.navHome;
-  dom.navTopics.textContent = t.navLearn;
-  dom.navPlan.textContent = t.navPlan;
-  dom.navGymi.textContent = t.navGymi;
+  dom.languageCurrentLabel.textContent = state.language === "en" ? "EN" : "DE";
+  dom.languageToggleButton.setAttribute("aria-label", state.language === "en" ? "English" : "Deutsch");
+  dom.languageFlag.className = `csd-indicator-flag ${state.language === "en" ? "csd-flag-uk" : "csd-flag-de"}`;
+  dom.languageOptionEnglish.parentElement?.toggleAttribute("hidden", state.language === "en");
+  dom.languageOptionGerman.parentElement?.toggleAttribute("hidden", state.language === "de");
+  if (dom.navHome) {
+    dom.navHome.textContent = t.navHome;
+  }
+  if (dom.navTopics) {
+    dom.navTopics.textContent = t.navLearn;
+  }
+  if (dom.navPlan) {
+    dom.navPlan.textContent = t.navPlan;
+  }
+  if (dom.navGymi) {
+    dom.navGymi.textContent = t.navGymi;
+  }
   dom.openAuthButton.textContent = state.account && state.authToken ? t.logoutButton : t.loginButton;
   dom.openProfileButton.textContent = t.avatarProfile;
   dom.avatarLogoutButton.textContent = t.avatarLogout;
-  dom.topicsCount.textContent = String(topics.length);
-  dom.practiceCount.textContent = String(
-    topics.reduce((sum: number, topic: TopicContent) => sum + topic.practice.easy.length + topic.practice.medium.length + topic.practice.hard.length, 0)
-  );
-  dom.trackCount.textContent = "3";
   dom.views.forEach((view) => view.classList.toggle("active", view.dataset.view === state.currentView));
-  dom.avatarShell.hidden = !Boolean(state.account && state.authToken);
+  dom.avatarShell.hidden = true;
   renderAvatar();
-  dom.landingLearnerNote.textContent = state.account
-    ? `${getDisplayName()} ${t.currentLearnerSignedIn}`
-    : t.currentLearnerSignedOut;
   updateStaticTexts();
 }
 
 function updateStaticTexts(): void {
   const t = translations[state.language];
+  const home = homePageContent[state.language];
 
-  setText(".view[data-view='home'] h1", t.homeTitle);
-  setText(".view[data-view='home'] .hero-text", t.homeText);
-  setText(".view[data-view='home'] .hero-actions .primary-button", t.homeOpenTopics);
-  setText(".view[data-view='home'] .hero-actions .secondary-button", t.homeCreateAccount);
-  setText(".view[data-view='home'] .panel-card-accent .panel-kicker", t.appIncludes);
-  setText(".view[data-view='home'] .panel-card-accent h2", t.appIncludesTitle);
-  setText("#focus-topic-description", t.appIncludesText);
-  setText(".view[data-view='home'] .hero-panel .panel-card:last-child .panel-kicker", t.currentLearner);
-  setText(".view[data-view='home'] .section-heading .eyebrow", t.mainSections);
-  setText(".view[data-view='home'] .section-heading h2", t.openSectionTitle);
-  setText(".view[data-view='home'] .section-heading p", t.openSectionText);
-  setText(".landing-card:nth-child(1) .panel-kicker", t.learnCardKicker);
-  setText(".landing-card:nth-child(1) h3", t.learnCardTitle);
-  setText(".landing-card:nth-child(1) p:nth-of-type(2)", t.learnCardText);
-  setText(".landing-card:nth-child(1) .primary-button", t.learnCardButton);
-  setText(".landing-card:nth-child(2) .panel-kicker", t.planCardKicker);
-  setText(".landing-card:nth-child(2) h3", t.planCardTitle);
-  setText(".landing-card:nth-child(2) p:nth-of-type(2)", t.planCardText);
-  setText(".landing-card:nth-child(2) .primary-button", t.planCardButton);
-  setText(".landing-card:nth-child(3) .panel-kicker", t.gymiCardKicker);
-  setText(".landing-card:nth-child(3) h3", t.gymiCardTitle);
-  setText(".landing-card:nth-child(3) p:nth-of-type(2)", t.gymiCardText);
-  setText(".landing-card:nth-child(3) .primary-button", t.gymiCardButton);
+  setText("#home-hero-title", home.hero.title);
+  setText("#home-hero-subtitle", home.hero.subtitle);
+  setText("#home-hero-lang-button", home.hero.primaryButton);
+  setText("#home-hero-kurz-button", home.hero.secondaryButton);
+  setText("#home-info-1", home.hero.infoCard[0]);
+  setText("#home-info-2", home.hero.infoCard[1]);
+  setText("#home-info-3", home.hero.infoCard[2]);
+  setText("#benefit-1-title", home.benefits[0].title);
+  setText("#benefit-1-text", home.benefits[0].text);
+  setText("#benefit-2-title", home.benefits[1].title);
+  setText("#benefit-2-text", home.benefits[1].text);
+  setText("#benefit-3-title", home.benefits[2].title);
+  setText("#benefit-3-text", home.benefits[2].text);
+  setText("#exam-lang-title", home.examCards.lang.title);
+  setText("#exam-lang-label", home.examCards.lang.label);
+  setText("#exam-lang-text", home.examCards.lang.text);
+  setText("#open-lang-track-button", home.examCards.lang.button);
+  setText("#exam-kurz-title", home.examCards.kurz.title);
+  setText("#exam-kurz-label", home.examCards.kurz.label);
+  setText("#exam-kurz-text", home.examCards.kurz.text);
+  setText("#open-kurz-track-button", home.examCards.kurz.button);
+  setText("#admission-eyebrow", home.admission.eyebrow);
+  setText("#admission-title", home.admission.title);
+  setText("#admission-text", home.admission.text);
+  setText("#admission-zap-title", home.admission.zapTitle);
+  setText("#admission-zap-text", home.admission.zapText);
+  setText("#admission-zap-link", home.admission.zapLink);
+  setText("#admission-brochure-link", home.admission.brochureLink);
+  setText("#admission-note", home.admission.note);
+  setText("#admission-lang-title", home.admission.langTitle);
+  setText("#admission-lang-text", home.admission.langText);
+  setText("#admission-lang-link", home.admission.langLink);
+  setText("#admission-kurz-title", home.admission.kurzTitle);
+  setText("#admission-kurz-text", home.admission.kurzText);
+  setText("#admission-kurz-link", home.admission.kurzLink);
+  setText("#admission-unter-title", home.admission.unterTitle);
+  setText("#admission-unter-text", home.admission.unterText);
+  setText("#admission-unter-link", home.admission.unterLink);
+  setText("#home-cta-title", home.cta.title);
+  setText("#home-cta-text", home.cta.text);
+  setText("#home-cta-lang-button", home.cta.langButton);
+  setText("#home-cta-kurz-button", home.cta.kurzButton);
+  setText("#home-footer-tagline", home.footer.tagline);
+  setText("#home-footer-official", home.footer.officialInfo);
+  setText("#home-footer-privacy", home.footer.privacy);
+  setText("#home-footer-contact", home.footer.contact);
   setText(".view[data-view='topics'] .section-heading .eyebrow", t.topicsEyebrow);
   setText(".view[data-view='topics'] .section-heading h2", t.topicsTitle);
   setText(".view[data-view='topics'] .section-heading p", t.topicsText);
@@ -1253,16 +1548,7 @@ function updateStaticTexts(): void {
   setText(".view[data-view='auth'] .auth-info-card .mini-checklist li:nth-child(3)", t.authWhy3);
   setText("#switch-exam-button", t.nextMockExam);
 
-  updateHeroStatLabels();
   updateFormOptions();
-}
-
-function updateHeroStatLabels(): void {
-  const t = translations[state.language];
-  const labels = queryAll<HTMLElement>(".hero-stats article span");
-  if (labels[0]) labels[0].textContent = t.statsTopics;
-  if (labels[1]) labels[1].textContent = t.statsTasks;
-  if (labels[2]) labels[2].textContent = t.statsSections;
 }
 
 function updateFormOptions(): void {
@@ -1405,17 +1691,24 @@ function renderSelectedTopic(): void {
     ? translations[state.language].topicFinishedAlready
     : translations[state.language].topicsFinishButton;
 
+  dom.topicFormula.textContent = formatMathText(topic.formula);
   fillList(dom.selectedTopicTheory, topic.theory);
   fillList(dom.practiceEasy, topic.practice.easy);
   fillList(dom.practiceMedium, topic.practice.medium);
   fillList(dom.practiceHard, topic.practice.hard);
+
+  if (topic.id === "simplify-terms") {
+    void simplifyTermsCanvas.show(state.language);
+  } else {
+    simplifyTermsCanvas.hide();
+  }
 }
 
 function fillList(element: HTMLElement, items: string[]): void {
   element.innerHTML = "";
   items.forEach((item) => {
     const li = document.createElement("li");
-    li.textContent = item;
+    li.textContent = formatMathText(item);
     element.appendChild(li);
   });
 }
@@ -1482,35 +1775,36 @@ function renderPlanArea(): void {
 function renderGymiArea(): void {
   const t = translations[state.language];
   const tracks = getTracks();
-  const exams = getMockExams();
+  const exams = getMockExams().filter((exam) => {
+    const source = mockExamRecords.find((record) => record.slug === exam.id);
+    return source?.track_code === state.activeTrackId;
+  });
 
   dom.gymiTrackGrid.innerHTML = "";
 
   tracks.forEach((track) => {
     const card = document.createElement("article");
-    card.className = "gymi-card";
+    const isActive = track.id === state.activeTrackId;
+    card.className = `gymi-card${isActive ? " active" : ""}`;
     card.innerHTML = `
       <h3>${escapeHtml(track.title)}</h3>
       <p>${escapeHtml(track.audience)}</p>
       <div class="gymi-pill-row">${track.pillars.map((pillar) => `<span>${escapeHtml(pillar)}</span>`).join("")}</div>
       <p>${escapeHtml(track.diagnostics)}</p>
-      <button class="secondary-button" type="button">${escapeHtml(t.useTrack)}</button>
+      <button class="${isActive ? "primary-button" : "secondary-button"}" type="button">${escapeHtml(t.useTrack)}</button>
     `;
 
     const button = card.querySelector("button");
     button?.addEventListener("click", () => {
-      state.studyPlan.goal = "gymi";
-      state.studyPlan.grade = track.id === "lang" ? "5-6" : "7-8";
-      state.studyPlan.topicIds = track.id === "lang" ? ["fractions", "geometry"] : ["fractions", "equations"];
-      persistStudyPlan();
-      renderPlanArea();
-      navigateTo("plan");
+      openExamTrack(track.id);
+      renderGymiArea();
     });
 
     dom.gymiTrackGrid.appendChild(card);
   });
 
   if (exams.length === 0) {
+    dom.switchExamButton.hidden = true;
     dom.mockExamTitle.textContent = "";
     dom.mockExamDescription.textContent = "";
     dom.mockExamTasks.innerHTML = "";
@@ -1525,6 +1819,7 @@ function renderGymiArea(): void {
   if (!exam) {
     return;
   }
+  dom.switchExamButton.hidden = exams.length <= 1;
   dom.mockExamTitle.textContent = exam.title;
   dom.mockExamDescription.textContent = exam.description;
   fillList(dom.mockExamTasks, exam.tasks);
@@ -1538,8 +1833,8 @@ function renderAuthPage(): void {
   dom.logInTab.textContent = t.authLogIn;
   dom.signUpTab.classList.toggle("active", state.authMode === "sign-up");
   dom.logInTab.classList.toggle("active", state.authMode === "log-in");
-  dom.authDisplayNameField.hidden = state.authMode !== "sign-up";
-  dom.authGradeField.hidden = state.authMode !== "sign-up";
+  dom.authDisplayNameField.hidden = true;
+  dom.authGradeField.hidden = true;
   dom.authSubmitButton.textContent = state.authMode === "sign-up" ? t.authCreateAccount : t.authLogIn;
   dom.authSwitchButton.textContent = state.authMode === "sign-up" ? t.authAlready : t.authNeedNew;
   dom.authDisplayNameLabel.textContent = t.authName;
@@ -1547,6 +1842,7 @@ function renderAuthPage(): void {
   dom.authEmailLabel.textContent = t.authEmail;
   dom.authPasswordLabel.textContent = t.authPassword;
   dom.authPasswordInput.placeholder = t.authPasswordPlaceholder;
+  dom.authPasswordInput.autocomplete = state.authMode === "sign-up" ? "new-password" : "current-password";
   dom.authGradeLabel.textContent = t.authLevel;
   dom.authMessage.className = "auth-message learner-note";
   dom.authMessage.textContent = isSignedIn ? t.authSignedIn : t.authHelper;
@@ -1644,7 +1940,7 @@ function renderAvatar(): void {
     dom.profileAvatarImage.hidden = true;
     dom.profileAvatarInitials.hidden = false;
     dom.profileAvatarInitials.textContent = "MG";
-    dom.avatarName.textContent = "MathGinius";
+    dom.avatarName.textContent = "MathGenius";
     return;
   }
 
@@ -1674,6 +1970,12 @@ function navigateTo(viewName: ViewName): void {
   renderShell();
 }
 
+function openExamTrack(trackId: string): void {
+  state.activeTrackId = trackId;
+  state.mockExamIndex = 0;
+  navigateTo("gymi");
+}
+
 function toggleAvatarMenu(): void {
   state.avatarMenuOpen = !state.avatarMenuOpen;
   dom.avatarMenu.hidden = !state.avatarMenuOpen;
@@ -1695,13 +1997,8 @@ async function submitAuthForm(): Promise<void> {
   const t = translations[state.language];
   const email = dom.authEmailInput.value.trim();
   const password = dom.authPasswordInput.value;
-  const displayName = dom.authDisplayNameInput.value.trim();
-  const gradeBand = dom.authGradeSelect.value;
   const endpoint = state.authMode === "sign-up" ? "/api/auth/register" : "/api/auth/login";
-  const payload =
-    state.authMode === "sign-up"
-      ? { email, password, displayName, gradeBand }
-      : { email, password };
+  const payload = state.authMode === "sign-up" ? { email, password } : { email, password };
 
   dom.authMessage.className = "auth-message learner-note";
   dom.authMessage.textContent = state.authMode === "sign-up" ? t.authCreating : t.authLoggingIn;
@@ -1726,6 +2023,10 @@ async function submitAuthForm(): Promise<void> {
     state.authToken = result.token;
     state.account = result.account;
     persistAuthState();
+    if (state.authMode === "sign-up") {
+      await syncCurrentLearnerDataToApi();
+    }
+    await hydrateLearnerDataFromApi();
     loadProfileForCurrentAccount();
     dom.authPasswordInput.value = "";
     renderAll();
@@ -1761,6 +2062,94 @@ async function hydrateAccountFromApi(): Promise<void> {
     state.authToken = "";
     state.account = null;
     persistAuthState();
+  }
+}
+
+async function hydrateLearnerDataFromApi(): Promise<void> {
+  if (!state.account || !state.authToken) {
+    return;
+  }
+
+  try {
+    const [planResponse, progressResponse] = await Promise.all([
+      fetch("/api/me/plan", {
+        headers: { Authorization: `Bearer ${state.authToken}` }
+      }),
+      fetch("/api/me/progress", {
+        headers: { Authorization: `Bearer ${state.authToken}` }
+      })
+    ]);
+
+    if (planResponse.ok) {
+      const plan = (await planResponse.json()) as ApiStudyPlan;
+      const topicIds = Array.isArray(plan.topic_slugs) ? plan.topic_slugs : [];
+      if (topicIds.length > 0) {
+        state.studyPlan = {
+          goal: toGoal(plan.goal ?? state.studyPlan.goal),
+          grade: plan.grade_band ?? state.studyPlan.grade,
+          intensity: toIntensity(plan.intensity ?? state.studyPlan.intensity),
+          topicIds
+        };
+      }
+    }
+
+    if (progressResponse.ok) {
+      const progress = (await progressResponse.json()) as ApiProgressEntry[];
+      const completedTopicIds = [...new Set(progress.filter((entry) => entry.status === "completed").map((entry) => entry.topic_slug))];
+      if (completedTopicIds.length > 0) {
+        state.completedTopicIds = completedTopicIds;
+      }
+    }
+
+    persistStudyPlan();
+    persistCompletedTopics();
+  } catch {
+    // Keep the learner's device data if the API is temporarily unavailable.
+  }
+}
+
+async function syncCurrentLearnerDataToApi(): Promise<void> {
+  if (!state.account || !state.authToken) {
+    return;
+  }
+
+  const requests: Promise<Response>[] = [];
+
+  if (state.studyPlan.topicIds.length > 0) {
+    requests.push(
+      fetch("/api/me/plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.authToken}`
+        },
+        body: JSON.stringify({
+          goal: state.studyPlan.goal,
+          gradeBand: state.studyPlan.grade,
+          intensity: state.studyPlan.intensity,
+          topicSlugs: state.studyPlan.topicIds
+        })
+      })
+    );
+  }
+
+  state.completedTopicIds.forEach((topicSlug) => {
+    requests.push(
+      fetch("/api/me/progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.authToken}`
+        },
+        body: JSON.stringify({ topicSlug, status: "completed" })
+      })
+    );
+  });
+
+  try {
+    await Promise.all(requests);
+  } catch {
+    // The UI can still proceed with local data and sync later.
   }
 }
 
@@ -2008,6 +2397,8 @@ function clearCurrentLearnerState(): void {
   localStorage.removeItem(storageKeys.plan);
   if (accountId) {
     localStorage.removeItem(profileStorageKey(accountId));
+    localStorage.removeItem(completedStorageKey(accountId));
+    localStorage.removeItem(planStorageKey(accountId));
   }
   dom.authForm.reset();
   dom.emailChangeRequestForm.reset();
@@ -2112,19 +2503,27 @@ function profileStorageKey(accountId: string): string {
   return `mathginius-profile-${accountId}`;
 }
 
-function loadCompletedTopics(): string[] {
+function completedStorageKey(accountId?: string): string {
+  return accountId ? `${storageKeys.completed}-${accountId}` : storageKeys.completed;
+}
+
+function planStorageKey(accountId?: string): string {
+  return accountId ? `${storageKeys.plan}-${accountId}` : storageKeys.plan;
+}
+
+function loadCompletedTopics(accountId?: string): string[] {
   try {
-    return JSON.parse(localStorage.getItem(storageKeys.completed) ?? "[]") as string[];
+    return JSON.parse(localStorage.getItem(completedStorageKey(accountId)) ?? "[]") as string[];
   } catch {
     return [];
   }
 }
 
 function persistCompletedTopics(): void {
-  localStorage.setItem(storageKeys.completed, JSON.stringify(state.completedTopicIds));
+  localStorage.setItem(completedStorageKey(state.account?.id), JSON.stringify(state.completedTopicIds));
 }
 
-function loadStudyPlan(): StudyPlanState {
+function loadStudyPlan(accountId?: string): StudyPlanState {
   const fallback: StudyPlanState = {
     goal: "school",
     grade: "5-6",
@@ -2133,7 +2532,7 @@ function loadStudyPlan(): StudyPlanState {
   };
 
   try {
-    const stored = JSON.parse(localStorage.getItem(storageKeys.plan) ?? "null") as Partial<StudyPlanState> | null;
+    const stored = JSON.parse(localStorage.getItem(planStorageKey(accountId)) ?? "null") as Partial<StudyPlanState> | null;
     return {
       goal: toGoal(stored?.goal ?? fallback.goal),
       grade: stored?.grade ?? fallback.grade,
@@ -2146,7 +2545,7 @@ function loadStudyPlan(): StudyPlanState {
 }
 
 function persistStudyPlan(): void {
-  localStorage.setItem(storageKeys.plan, JSON.stringify(state.studyPlan));
+  localStorage.setItem(planStorageKey(state.account?.id), JSON.stringify(state.studyPlan));
 }
 
 function loadAuthToken(): string {
@@ -2177,7 +2576,7 @@ function persistAuthState(): void {
 
 function loadLanguage(): Language {
   const value = localStorage.getItem(storageKeys.language);
-  return value === "de" ? "de" : "en";
+  return value === "en" ? "en" : "de";
 }
 
 function setLanguage(language: Language): void {
@@ -2207,6 +2606,7 @@ function mapApiTopicToClientTopic(topic: ApiTopic, language: Language): TopicCon
     category: override?.category ?? categoryLabel(topic.category),
     duration: durationLabel(topic.duration_minutes),
     summary: override?.summary ?? topic.summary,
+    formula: override?.formula ?? formulaForTopic(topic.slug, language),
     theory: override?.theory ?? topic.theory_points,
     practice: {
       easy: override?.practiceEasy ?? topic.practice_easy,
@@ -2214,6 +2614,25 @@ function mapApiTopicToClientTopic(topic: ApiTopic, language: Language): TopicCon
       hard: override?.practiceHard ?? topic.practice_hard
     }
   };
+}
+
+function formulaForTopic(topicId: string, language: Language): string {
+  if (topicId === "simplify-terms") {
+    return language === "de"
+      ? "Klammern öffnen -> gleichartige Terme zusammenfassen -> Faktoren kürzen -> vollständig vereinfachen"
+      : "Open brackets -> combine like terms -> reduce factors -> simplify completely";
+  }
+  if (topicId === "equations") {
+    return language === "de" ? "x + a = b -> x = b - a" : "x + a = b -> x = b - a";
+  }
+  if (topicId === "geometry") {
+    return language === "de"
+      ? "Umfang = Summe aller Seiten; Fläche Rechteck = Länge x Breite"
+      : "Perimeter = sum of all sides; Rectangle area = length x width";
+  }
+  return language === "de"
+    ? "Prozent = Bruch x 100; Teil = Prozent x Ganzes"
+    : "Percentage = fraction x 100; Part = percentage x whole";
 }
 
 function mapApiTrackToClientTrack(track: ApiGymiTrack, language: Language): TrackContent {

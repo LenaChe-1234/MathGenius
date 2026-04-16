@@ -1,0 +1,110 @@
+[
+  {
+    "id": "simplify-1",
+    "level": "Einfach",
+    "topic": "Klammern ausmultiplizieren",
+    "instruction": "Vereinfache den Term so weit wie möglich.",
+    "question": "2(x - 2) - 3(1 - 2x)",
+    "acceptedAnswers": ["8x-7", "8*x-7", "-7+8x", "8x + -7"],
+    "canonicalAnswer": "8x - 7",
+    "canonicalExpression": "8x - 7",
+    "hint": "Öffne beide Klammern sorgfältig. Achte auf das Minuszeichen vor 3(1 - 2x).",
+    "steps": [
+      "Multipliziere die erste Klammer aus: 2(x - 2) = 2x - 4.",
+      "Multipliziere die zweite Klammer aus: -3(1 - 2x) = -3 + 6x.",
+      "Fasse alles zusammen: 2x - 4 - 3 + 6x.",
+      "Ordne gleichartige Terme: 2x + 6x = 8x und -4 - 3 = -7.",
+      "Endergebnis: 8x - 7."
+    ],
+    "commonMistakes": [
+      "Vorzeichen beim Multiplizieren mit -3 nicht zu wechseln.",
+      "2x und 6x falsch zusammenzufassen.",
+      "Bei 2x - 4 - 3 + 6x stehen zu bleiben."
+    ],
+    "similarExample": {
+      "question": "3(x - 1) - 2(2 - x)",
+      "answer": "5x - 7"
+    }
+  },
+  {
+    "id": "simplify-2",
+    "level": "Einfach",
+    "topic": "Faktoren multiplizieren",
+    "instruction": "Vereinfache den Term so weit wie möglich.",
+    "question": "2x · (3x · 5z)",
+    "acceptedAnswers": ["30x^2z", "30x²z", "30*x^2*z", "30z*x^2"],
+    "canonicalAnswer": "30x²z",
+    "canonicalExpression": "30*x^2*z",
+    "hint": "Multipliziere zuerst die Zahlen und fasse dann die Variablen zusammen.",
+    "steps": [
+      "Multipliziere die Zahlen: 2 · 3 · 5 = 30.",
+      "Multipliziere die Variablen: x · x = x².",
+      "z bleibt stehen.",
+      "Endergebnis: 30x²z."
+    ],
+    "commonMistakes": [
+      "x · x als 2x statt als x² zu schreiben.",
+      "Die Variable z zu vergessen.",
+      "Die Faktoren falsch zu multiplizieren."
+    ],
+    "similarExample": {
+      "question": "4a · (2a · 3b)",
+      "answer": "24a²b"
+    }
+  },
+  {
+    "id": "simplify-3",
+    "level": "Mittel",
+    "topic": "Brüche",
+    "instruction": "Vereinfache den Term so weit wie möglich.",
+    "question": "((18a - 14a) / 6) · ((6a - 12) / (4a))",
+    "acceptedAnswers": ["a-2", "-2+a", "a + -2"],
+    "canonicalAnswer": "a - 2",
+    "canonicalExpression": "a - 2",
+    "hint": "Vereinfache zuerst jede Klammer. Kürze dann gemeinsame Faktoren, bevor du ausmultiplizierst.",
+    "steps": [
+      "Vereinfache den ersten Zähler: 18a - 14a = 4a.",
+      "Dann steht da: (4a / 6) · ((6a - 12) / 4a).",
+      "Kürze den gemeinsamen Faktor 4a in Zähler und Nenner.",
+      "Es bleibt (1 / 6)(6a - 12).",
+      "Verteile 1/6: 6a/6 - 12/6 = a - 2.",
+      "Endergebnis: a - 2."
+    ],
+    "commonMistakes": [
+      "18a - 14a nicht zuerst zu vereinfachen.",
+      "Terme in einer Summe falsch zu kürzen.",
+      "Zu vergessen, dass 12/6 = 2 ist."
+    ],
+    "similarExample": {
+      "question": "((12x - 8x) / 4) · ((8x - 16) / (4x))",
+      "answer": "2x - 4"
+    }
+  },
+  {
+    "id": "simplify-4",
+    "level": "Schwer",
+    "topic": "Wurzeln zusammenfassen",
+    "instruction": "Vereinfache den Term so weit wie möglich.",
+    "question": "√(49x² + (4x)² + (-4x)²) - √(2x) · √(18x)",
+    "acceptedAnswers": ["x", "1x"],
+    "canonicalAnswer": "x",
+    "canonicalExpression": "x",
+    "hint": "Vereinfache zuerst den Ausdruck unter der ersten Wurzel. Nutze dann √a · √b = √(ab).",
+    "steps": [
+      "Berechne die Quadrate unter der ersten Wurzel: 49x² + 16x² + 16x² = 81x².",
+      "Damit wird der erste Teil zu √(81x²) = 9x in diesem Schulkontext.",
+      "Fasse den zweiten Teil zusammen: √(2x) · √(18x) = √(36x²) = 6x.",
+      "Subtrahiere: 9x - 6x = x.",
+      "Endergebnis: x."
+    ],
+    "commonMistakes": [
+      "Zu vergessen, dass (-4x)² positiv 16x² ist.",
+      "Wurzeln nicht erst zusammenzufassen.",
+      "Sich bei 49 + 16 + 16 zu verrechnen."
+    ],
+    "similarExample": {
+      "question": "√(25y² + (2y)² + (-2y)²) - √(3y) · √(12y)",
+      "answer": "y"
+    }
+  }
+]

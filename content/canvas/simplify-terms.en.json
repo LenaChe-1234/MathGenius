@@ -1,0 +1,110 @@
+[
+  {
+    "id": "simplify-1",
+    "level": "Easy",
+    "topic": "Expand brackets",
+    "instruction": "Simplify the expression as much as possible.",
+    "question": "2(x - 2) - 3(1 - 2x)",
+    "acceptedAnswers": ["8x-7", "8*x-7", "-7+8x", "8x + -7"],
+    "canonicalAnswer": "8x - 7",
+    "canonicalExpression": "8x - 7",
+    "hint": "Open both brackets carefully. Watch the minus sign before 3(1 - 2x).",
+    "steps": [
+      "Expand the first bracket: 2(x - 2) = 2x - 4.",
+      "Expand the second bracket: -3(1 - 2x) = -3 + 6x.",
+      "Combine all parts: 2x - 4 - 3 + 6x.",
+      "Group like terms: 2x + 6x = 8x and -4 - 3 = -7.",
+      "Final answer: 8x - 7."
+    ],
+    "commonMistakes": [
+      "Forgetting to change signs when multiplying by -3.",
+      "Combining 2x and 6x incorrectly.",
+      "Leaving the answer as 2x - 4 - 3 + 6x without simplifying."
+    ],
+    "similarExample": {
+      "question": "3(x - 1) - 2(2 - x)",
+      "answer": "5x - 7"
+    }
+  },
+  {
+    "id": "simplify-2",
+    "level": "Easy",
+    "topic": "Multiply factors",
+    "instruction": "Simplify the expression as much as possible.",
+    "question": "2x · (3x · 5z)",
+    "acceptedAnswers": ["30x^2z", "30x²z", "30*x^2*z", "30z*x^2"],
+    "canonicalAnswer": "30x²z",
+    "canonicalExpression": "30*x^2*z",
+    "hint": "Multiply the numbers first, then combine the variables.",
+    "steps": [
+      "Multiply the numbers: 2 · 3 · 5 = 30.",
+      "Multiply the variables: x · x = x².",
+      "Keep z as it is: z.",
+      "Final answer: 30x²z."
+    ],
+    "commonMistakes": [
+      "Writing x · x as 2x instead of x².",
+      "Forgetting the variable z.",
+      "Multiplying the coefficients incorrectly."
+    ],
+    "similarExample": {
+      "question": "4a · (2a · 3b)",
+      "answer": "24a²b"
+    }
+  },
+  {
+    "id": "simplify-3",
+    "level": "Medium",
+    "topic": "Fractions",
+    "instruction": "Simplify the expression as much as possible.",
+    "question": "((18a - 14a) / 6) · ((6a - 12) / (4a))",
+    "acceptedAnswers": ["a-2", "-2+a", "a + -2"],
+    "canonicalAnswer": "a - 2",
+    "canonicalExpression": "a - 2",
+    "hint": "First simplify each bracket. Then reduce common factors before expanding.",
+    "steps": [
+      "Simplify the first numerator: 18a - 14a = 4a.",
+      "Now the term is (4a / 6) · ((6a - 12) / 4a).",
+      "Reduce the common factor 4a in numerator and denominator.",
+      "This leaves (1 / 6)(6a - 12).",
+      "Distribute 1/6: 6a/6 - 12/6 = a - 2.",
+      "Final answer: a - 2."
+    ],
+    "commonMistakes": [
+      "Not simplifying 18a - 14a first.",
+      "Trying to cancel terms inside a sum incorrectly.",
+      "Forgetting that 12/6 = 2."
+    ],
+    "similarExample": {
+      "question": "((12x - 8x) / 4) · ((8x - 16) / (4x))",
+      "answer": "2x - 4"
+    }
+  },
+  {
+    "id": "simplify-4",
+    "level": "Hard",
+    "topic": "Combine square roots",
+    "instruction": "Simplify the expression as much as possible.",
+    "question": "√(49x² + (4x)² + (-4x)²) - √(2x) · √(18x)",
+    "acceptedAnswers": ["x", "1x"],
+    "canonicalAnswer": "x",
+    "canonicalExpression": "x",
+    "hint": "Simplify inside the first root first. Then use √a · √b = √(ab).",
+    "steps": [
+      "Compute the squares inside the first root: 49x² + 16x² + 16x² = 81x².",
+      "So the first part becomes √(81x²) = 9x in this school context.",
+      "Combine the second part: √(2x) · √(18x) = √(36x²) = 6x.",
+      "Subtract: 9x - 6x = x.",
+      "Final answer: x."
+    ],
+    "commonMistakes": [
+      "Forgetting that (-4x)² is positive 16x².",
+      "Not combining roots before simplifying.",
+      "Making an arithmetic error with 49 + 16 + 16."
+    ],
+    "similarExample": {
+      "question": "√(25y² + (2y)² + (-2y)²) - √(3y) · √(12y)",
+      "answer": "y"
+    }
+  }
+]

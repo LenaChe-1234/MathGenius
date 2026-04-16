@@ -68,11 +68,11 @@ export async function createApp() {
   }
 
   function sendPasswordResetCodeEmail(email: string, code: string): void {
-    console.log(`[MathGinius] Password reset code for ${email}: ${code}`);
+    console.log(`[MathGenius] Password reset code for ${email}: ${code}`);
   }
 
   function sendEmailChangeCodeEmail(currentEmail: string, nextEmail: string, code: string): void {
-    console.log(`[MathGinius] Email change code sent to ${currentEmail} for new email ${nextEmail}: ${code}`);
+    console.log(`[MathGenius] Email change code sent to ${currentEmail} for new email ${nextEmail}: ${code}`);
   }
 
   app.use(cors());
@@ -121,12 +121,14 @@ export async function createApp() {
   app.post("/api/auth/register", async (req, res) => {
     const email = sanitizeEmail(String(req.body?.email ?? ""));
     const password = String(req.body?.password ?? "");
-    const displayName = sanitizeDisplayName(String(req.body?.displayName ?? ""));
-    const gradeBand = sanitizeGradeBand(String(req.body?.gradeBand ?? ""));
+    const rawDisplayName = sanitizeDisplayName(String(req.body?.displayName ?? ""));
+    const displayName =
+      rawDisplayName || email.split("@")[0]?.replace(/[._-]+/g, " ").trim().slice(0, 40) || "Learner";
+    const gradeBand = sanitizeGradeBand(String(req.body?.gradeBand ?? "")) || "5-6";
 
-    if (!isReasonableEmail(email) || !isReasonablePassword(password) || !displayName || !gradeBand) {
+    if (!isReasonableEmail(email) || !isReasonablePassword(password)) {
       res.status(400).json({
-        error: "Valid email, password, display name, and grade band are required"
+        error: "Valid email and password are required"
       });
       return;
     }
