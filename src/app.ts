@@ -68,11 +68,11 @@ export async function createApp() {
   }
 
   function sendPasswordResetCodeEmail(email: string, code: string): void {
-    console.log(`[MathGinius] Password reset code for ${email}: ${code}`);
+    console.log(`[MathGenius] Password reset code for ${email}: ${code}`);
   }
 
   function sendEmailChangeCodeEmail(currentEmail: string, nextEmail: string, code: string): void {
-    console.log(`[MathGinius] Email change code sent to ${currentEmail} for new email ${nextEmail}: ${code}`);
+    console.log(`[MathGenius] Email change code sent to ${currentEmail} for new email ${nextEmail}: ${code}`);
   }
 
   app.use(cors());

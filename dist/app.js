@@ -38,10 +38,10 @@ export async function createApp() {
         return store.getAccountById(payload.sub);
     }
     function sendPasswordResetCodeEmail(email, code) {
-        console.log(`[MathGinius] Password reset code for ${email}: ${code}`);
+        console.log(`[MathGenius] Password reset code for ${email}: ${code}`);
     }
     function sendEmailChangeCodeEmail(currentEmail, nextEmail, code) {
-        console.log(`[MathGinius] Email change code sent to ${currentEmail} for new email ${nextEmail}: ${code}`);
+        console.log(`[MathGenius] Email change code sent to ${currentEmail} for new email ${nextEmail}: ${code}`);
     }
     app.use(cors());
     app.use(express.json());

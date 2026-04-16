@@ -1,6 +1,6 @@
-# MathGinius
+# MathGenius
 
-MathGinius is a web application prototype for helping children learn mathematics through three core learning flows:
+MathGenius is a web application prototype for helping children learn mathematics through three core learning flows:
 
 - a school math topic library with theory and practice;
 - personalized study plans with saved progress;

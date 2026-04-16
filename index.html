@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MathGinius</title>
+    <title>MathGenius</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260416-2" />
   </head>
   <body>
     <div class="page-shell">
@@ -30,7 +30,7 @@
               </svg>
             </span>
             <span>
-              <span class="brand-name">MathGinius</span>
+              <span class="brand-name">MathGenius</span>
             </span>
           </button>
 
@@ -39,32 +39,43 @@
             <button class="ghost-link nav-link" data-view-target="topics" type="button">Learn</button>
             <button class="ghost-link nav-link" data-view-target="plan" type="button">My Plan</button>
             <button class="ghost-link nav-link" data-view-target="gymi" type="button">Gymi</button>
+            <button class="ghost-link" id="nav-kurz-button" type="button">Kurz Gymnasium</button>
+            <button class="ghost-link" id="nav-lang-button" type="button">Lang Gymnasium</button>
           </div>
 
           <div class="header-controls">
             <div class="language-switcher" aria-label="Language switcher">
-              <button class="language-button active" id="lang-active-button" type="button" aria-expanded="false" aria-haspopup="true" aria-label="English">🇬🇧</button>
+              <button
+                class="language-button active"
+                id="lang-active-button"
+                type="button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-label="English"
+              >
+                EN
+              </button>
               <div class="language-menu" id="language-menu" hidden>
-                <button class="language-button" id="lang-other-button" type="button" aria-label="Deutsch">🇩🇪</button>
+                <button class="language-button" id="lang-other-button" type="button" aria-label="Deutsch">DE</button>
               </div>
             </div>
 
             <div class="account-corner">
-            <button class="primary-button" id="open-auth-button" type="button">Log in</button>
+              <button class="primary-button" id="open-auth-button" type="button">Log in</button>
 
-            <div class="avatar-shell" id="avatar-shell" hidden>
-              <button class="avatar-button" id="avatar-button" type="button" aria-expanded="false">
-                <img id="avatar-image" class="avatar-image" alt="User avatar" hidden />
-                <span id="avatar-initials" class="avatar-initials">MG</span>
-                <span id="avatar-name" class="avatar-name">MathGinius</span>
-              </button>
+              <div class="avatar-shell" id="avatar-shell" hidden>
+                <button class="avatar-button" id="avatar-button" type="button" aria-expanded="false">
+                  <img id="avatar-image" class="avatar-image" alt="User avatar" hidden />
+                  <span id="avatar-initials" class="avatar-initials">MG</span>
+                  <span id="avatar-name" class="avatar-name">MathGenius</span>
+                </button>
 
-              <div class="avatar-menu" id="avatar-menu" hidden>
-                <button class="avatar-menu-item" id="open-profile-button" type="button">User profile</button>
-                <button class="avatar-menu-item" id="avatar-logout-button" type="button">Log out</button>
+                <div class="avatar-menu" id="avatar-menu" hidden>
+                  <button class="avatar-menu-item" id="open-profile-button" type="button">User profile</button>
+                  <button class="avatar-menu-item" id="avatar-logout-button" type="button">Log out</button>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </nav>
       </header>
@@ -74,15 +85,13 @@
           <section class="hero">
             <div class="hero-grid home-hero-grid">
               <div class="hero-copy">
-                <h1>Learn with one clear next step, not one crowded first screen</h1>
+                <h1>Choose your Gymi path without a crowded first screen</h1>
                 <p class="hero-text">
-                  MathGinius helps a learner move through school topics, personal
-                  plans, and Gymi preparation in separate clear sections. Start on
-                  the landing page, open one section, and focus only on what matters now.
+                  MathGenius separates exams, topics, plan, profile, and security into clear areas so the learner can focus on one next step at a time.
                 </p>
 
                 <div class="hero-actions">
-                  <button class="primary-button nav-link" data-view-target="topics" type="button">Open learning topics</button>
+                  <button class="primary-button nav-link" data-view-target="gymi" type="button">Open Gymi paths</button>
                   <button class="secondary-button nav-link" data-view-target="auth" type="button">Create account</button>
                 </div>
 
@@ -96,8 +105,8 @@
                     <span>practice tasks</span>
                   </article>
                   <article>
-                    <strong id="track-count">3</strong>
-                    <span>main app sections</span>
+                    <strong id="track-count">0</strong>
+                    <span>exam paths</span>
                   </article>
                 </div>
               </div>
@@ -105,7 +114,7 @@
               <aside class="hero-panel">
                 <div class="panel-card panel-card-accent">
                   <p class="panel-kicker">This app includes</p>
-                  <h2>Short theory, guided practice, personal plans</h2>
+                  <h2>Clear routes, worked examples, and personal planning</h2>
                   <p id="focus-topic-description"></p>
                 </div>
 
@@ -121,31 +130,22 @@
             <div class="section-heading">
               <span class="eyebrow">Main sections</span>
               <h2>Open the section you need</h2>
-              <p>
-                The first landing explains the app. Each section below opens its own page with its own layout and purpose.
-              </p>
+              <p>The homepage should only help the learner enter the right product area instead of mixing all flows together.</p>
             </div>
 
             <div class="landing-grid">
               <article class="landing-card">
-                <p class="panel-kicker">Learning Library</p>
-                <h3>Topics page</h3>
-                <p>Browse school topics, read short theory, and solve tasks from easy to hard.</p>
-                <button class="primary-button nav-link" data-view-target="topics" type="button">Go to topics</button>
+                <p class="panel-kicker">Exam path 01</p>
+                <h3>Kurzgymi-Prufung</h3>
+                <p>For a later entrance route with speed, calculations, and compact exam practice.</p>
+                <button class="primary-button" id="open-kurz-track-button" type="button">Open Kurzgymi</button>
               </article>
 
               <article class="landing-card">
-                <p class="panel-kicker">Personal Plan</p>
-                <h3>My plan page</h3>
-                <p>Build a personal study plan, choose topics, and view your current progress.</p>
-                <button class="primary-button nav-link" data-view-target="plan" type="button">Go to my plan</button>
-              </article>
-
-              <article class="landing-card">
-                <p class="panel-kicker">Gymi Preparation</p>
-                <h3>Gymi page</h3>
-                <p>Open focused Gymi tracks, mock exams, and challenge practice in a separate area.</p>
-                <button class="primary-button nav-link" data-view-target="gymi" type="button">Go to Gymi</button>
+                <p class="panel-kicker">Exam path 02</p>
+                <h3>Langgymi-Prufung</h3>
+                <p>For an earlier path with stronger foundations, step-by-step examples, and calm progression.</p>
+                <button class="primary-button" id="open-lang-track-button" type="button">Open Langgymi</button>
               </article>
             </div>
           </section>
@@ -156,10 +156,14 @@
             <div class="section-heading">
               <span class="eyebrow">Learning library</span>
               <h2>Choose a topic and start learning</h2>
-              <p>
-                This page is only for exploring topics, reading theory, and practicing one idea at a time.
-              </p>
+              <p>This page is only for exploring topics, reading theory, and practicing one idea at a time.</p>
             </div>
+
+            <nav class="content-nav" aria-label="Topic navigation">
+              <a href="#" class="content-nav-link" data-quick-nav="algebra">Algebra</a>
+              <a href="#" class="content-nav-link" data-quick-nav="geometry">Geometry</a>
+              <a href="#" class="content-nav-link" data-quick-nav="tasks">Tasks</a>
+            </nav>
 
             <div class="topics-toolbar">
               <div class="filter-group" id="grade-filters"></div>
@@ -182,25 +186,29 @@
                 <p class="topic-summary" id="selected-topic-summary"></p>
                 <div class="feedback-banner" id="topic-feedback" aria-live="polite">Pick a topic to see your next step.</div>
 
-                <section class="theory-card">
+                <section class="theory-card theory">
                   <h4>What to remember</h4>
                   <ul id="selected-topic-theory"></ul>
                 </section>
 
+                <section class="formula" id="topic-formula"></section>
+
                 <section class="practice-section">
-                  <div class="practice-column">
+                  <div class="practice-column example">
                     <h4>Start here</h4>
                     <ol id="practice-easy"></ol>
                   </div>
-                  <div class="practice-column">
+                  <div class="practice-column solution">
                     <h4>Keep going</h4>
                     <ol id="practice-medium"></ol>
                   </div>
-                  <div class="practice-column">
+                  <div class="practice-column solution">
                     <h4>Big challenge</h4>
                     <ol id="practice-hard"></ol>
                   </div>
                 </section>
+
+                <section class="topic-canvas" id="topic-canvas" hidden aria-live="polite"></section>
               </article>
             </div>
           </section>
@@ -211,9 +219,7 @@
             <div class="section-heading">
               <span class="eyebrow">Personal planning</span>
               <h2>Build and follow your own learning plan</h2>
-              <p>
-                This page is for selecting goals, choosing study rhythm, and checking saved progress.
-              </p>
+              <p>This page is for selecting goals, choosing study rhythm, and checking saved progress.</p>
             </div>
 
             <div class="builder-grid">
@@ -294,9 +300,7 @@
             <div class="section-heading">
               <span class="eyebrow">Gymi preparation</span>
               <h2>Open a Gymi section when you want a challenge</h2>
-              <p>
-                This page contains separate Gymi tracks and mock exams instead of mixing them into the normal learning flow.
-              </p>
+              <p>This page contains separate Gymi tracks and mock exams instead of mixing them into the normal learning flow.</p>
             </div>
 
             <div class="gymi-grid" id="gymi-track-grid"></div>
@@ -305,7 +309,7 @@
               <div class="mock-exam-header">
                 <div>
                   <p class="viewer-label">Mock exam</p>
-                  <h3 id="mock-exam-title">Diagnostic Test: Kurz Gymnasium</h3>
+                  <h3 id="mock-exam-title">Loading...</h3>
                 </div>
                 <button class="secondary-button" id="switch-exam-button" type="button">Next mock exam</button>
               </div>
@@ -321,14 +325,12 @@
             <div class="section-heading">
               <span class="eyebrow">User profile</span>
               <h2>Manage your personal profile</h2>
-              <p>
-                Edit your visible profile details here. This page keeps profile information in one clear place.
-              </p>
+              <p>Edit your visible profile details here. This page keeps profile information in one clear place.</p>
             </div>
 
             <div class="profile-grid">
               <aside class="builder-card profile-preview-card">
-                <div class="profile-avatar-large" id="profile-avatar-large">
+                <div class="profile-avatar-large">
                   <img id="profile-avatar-image" alt="Profile avatar" hidden />
                   <span id="profile-avatar-initials">MG</span>
                 </div>
@@ -375,6 +377,7 @@
 
                 <p class="auth-message learner-note" id="profile-message">Your profile settings help make the app feel personal.</p>
               </form>
+
               <section class="builder-card settings-actions-card">
                 <h3 id="profile-security-title">Security settings</h3>
                 <div class="settings-action-list">
@@ -383,7 +386,7 @@
                 </div>
                 <p class="auth-message learner-note" id="profile-security-message">Open a separate page to manage secure account changes.</p>
               </section>
-            </section>
+            </div>
           </section>
         </section>
 
@@ -466,9 +469,7 @@
             <div class="section-heading">
               <span class="eyebrow">Account access</span>
               <h2>Create your account or log in</h2>
-              <p>
-                After a successful sign up or log in, this page closes and your avatar appears in the top-right corner.
-              </p>
+              <p>After a successful sign up or log in, this page closes and your avatar appears in the top-right corner.</p>
             </div>
 
             <div class="auth-page-grid">
@@ -543,6 +544,6 @@
       </main>
     </div>
 
-    <script type="module" src="./dist/client/app.js"></script>
+    <script type="module" src="./dist/client/app.js?v=20260416-2"></script>
   </body>
 </html>

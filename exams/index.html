@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MathGenius</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-page-title-key="meta.exams" data-nav="exams">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/"><span class="brand-badge">MG</span><span data-i18n="brand.name">MathGenius</span></a>
+        <div class="header-actions">
+          <nav class="nav">
+            <a href="/" data-nav-link="dashboard" data-i18n="nav.dashboard">Dashboard</a>
+            <a href="/exams/" data-nav-link="exams" data-i18n="nav.exams">Exams</a>
+            <a href="/learn/" data-nav-link="learn" data-i18n="nav.learn">Learn</a>
+            <a href="/plan/" data-nav-link="plan" data-i18n="nav.plan">Study Plan</a>
+            <a href="/profile/" data-nav-link="profile" data-i18n="nav.profile">Profile</a>
+          </nav>
+          <div class="language-picker" id="language-picker">
+            <button class="language-toggle" id="language-toggle" type="button" data-i18n-aria-label="lang.label" aria-label="Language" aria-haspopup="true" aria-expanded="false"><span class="language-flag" id="language-flag">EN</span><span class="language-arrow" aria-hidden="true"></span></button>
+            <ul class="language-menu" id="language-menu" hidden>
+              <li><button class="language-option" type="button" data-lang="en"><span class="language-flag">EN</span><span data-i18n="lang.en">English</span></button></li>
+              <li><button class="language-option" type="button" data-lang="de"><span class="language-flag">DE</span><span data-i18n="lang.de">German</span></button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="page-main">
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow" data-i18n="exams.badge">Exam paths</div>
+              <h1 data-i18n="exams.title">Choose the exam path before choosing the next topic</h1>
+            </div>
+            <p data-i18n="exams.subtitle">The exam choice is now separated from the landing page.</p>
+          </div>
+          <div class="card-grid two">
+            <article class="card">
+              <div class="badge info" data-i18n="exams.kurz.badge">Exam Path 01</div>
+              <h3 data-i18n="exams.kurz.title">Kurzgymi</h3>
+              <p data-i18n="exams.kurz.text">Fast-paced compact exam practice.</p>
+              <ul class="list">
+                <li data-i18n="exams.kurz.point1">timed calculations and focused review</li>
+                <li data-i18n="exams.kurz.point2">word problems and efficient solving</li>
+                <li data-i18n="exams.kurz.point3">mock exams for weak-area improvement</li>
+              </ul>
+              <div class="actions" style="margin-top: 20px">
+                <a class="btn btn-primary" href="/learn/equations/" data-i18n="exams.cta">Open learning route</a>
+              </div>
+            </article>
+            <article class="card">
+              <div class="badge success" data-i18n="exams.lang.badge">Exam Path 02</div>
+              <h3 data-i18n="exams.lang.title">Langgymi</h3>
+              <p data-i18n="exams.lang.text">Foundation-building gradual learning.</p>
+              <ul class="list">
+                <li data-i18n="exams.lang.point1">strong fundamentals across key topics</li>
+                <li data-i18n="exams.lang.point2">clear worked examples before practice</li>
+                <li data-i18n="exams.lang.point3">steady route from basics to challenge tasks</li>
+              </ul>
+              <div class="actions" style="margin-top: 20px">
+                <a class="btn btn-primary" href="/learn/fractions/" data-i18n="exams.cta">Open learning route</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="container footer-box"><span data-i18n="footer.copy">MathGenius product structure prototype</span><span data-i18n="footer.note">Separated routes and shared UI system</span></div></footer>
+    <script type="module" src="/scripts/app.js"></script>
+  </body>
+</html>

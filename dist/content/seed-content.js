@@ -1,5 +1,30 @@
 export const seedTopics = [
     {
+        slug: "simplify-terms",
+        title: "Vereinfache die Terme so weit wie möglich",
+        grade_band: "7-8",
+        category: "Algebra",
+        duration_minutes: 35,
+        summary: "A focused Kurzgymi algebra canvas with four progressive tasks, answer checking, hints, and worked solutions.",
+        theory_points: [
+            "Open brackets carefully and track every sign before combining like terms.",
+            "When multiplying factors, multiply coefficients and combine equal variables into powers.",
+            "With fractions and roots, simplify structure before expanding and only cancel true common factors."
+        ],
+        practice_easy: [
+            "Expand brackets and combine like terms.",
+            "Multiply factors and write repeated variables as powers."
+        ],
+        practice_medium: [
+            "Simplify fractional expressions before distributing.",
+            "Check whether your expression is fully reduced."
+        ],
+        practice_hard: [
+            "Combine radicals only after simplifying inside each root.",
+            "Use the canvas to work through all four tasks from easy to hard."
+        ]
+    },
+    {
         slug: "fractions",
         title: "Fractions and Percentages",
         grade_band: "5-6",
@@ -70,13 +95,13 @@ export const seedTopics = [
 export const seedGymiTracks = [
     {
         code: "kurz",
-        title: "Kurz Gymnasium",
+        title: "Kurzgymi-Prüfung",
         audience: "For later admission, with a focus on speed, calculations, and word problems.",
         description: "Diagnostics, focused practice sets, weekly plans, and mock exams built around entrance-style mathematics."
     },
     {
         code: "lang",
-        title: "Lang Gymnasium",
+        title: "Langgymi-Prüfung",
         audience: "For early preparation, with a focus on fundamentals and accuracy.",
         description: "Step-by-step preparation in arithmetic, fractions, geometry, and recurring exam-style tasks."
     }
@@ -85,7 +110,7 @@ export const seedMockExams = [
     {
         slug: "kurz-diagnostic",
         track_code: "kurz",
-        title: "Diagnostic Test: Kurz Gymnasium",
+        title: "Mock Exam: Kurzgymi-Prüfung",
         description: "A starter mock exam covering calculations, fractions, word problems, and solution strategy.",
         duration_minutes: 45,
         tasks: [
@@ -97,7 +122,7 @@ export const seedMockExams = [
     {
         slug: "lang-foundation",
         track_code: "lang",
-        title: "Mock Exam: Lang Gymnasium Foundation",
+        title: "Mock Exam: Langgymi-Prüfung",
         description: "A sequence of tasks for core skills, reading accuracy, and clear written solutions.",
         duration_minutes: 40,
         tasks: [
