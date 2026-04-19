@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260416-2" />
+    <link rel="stylesheet" href="./styles.css?v=20260419-1" />
   </head>
   <body>
     <div class="page-shell">
@@ -51,21 +51,18 @@
                 aria-haspopup="true"
                 aria-label="Deutsch"
               >
-                <span id="csd-flag-container" class="csd-indicator-flag csd-flag-de" aria-hidden="true"></span>
-                <span class="language-button-label" id="language-current-label">DE</span>
+                <span class="language-button-label" id="language-current-label">🇩🇪 DE</span>
                 <span class="language-button-caret" aria-hidden="true"></span>
               </button>
               <ul class="edition-picker-dropdown" id="language-menu" hidden>
                 <li class="csd-flag csd-flag-uk">
                   <button class="edition-link" id="language-option-en" type="button">
-                    <span class="edition-flag csd-indicator-flag csd-flag-uk" aria-hidden="true"></span>
-                    <span>English</span>
+                    <span>🇬🇧 EN</span>
                   </button>
                 </li>
                 <li class="csd-flag csd-flag-de" hidden>
                   <button class="edition-link" id="language-option-de" type="button">
-                    <span class="edition-flag csd-indicator-flag csd-flag-de" aria-hidden="true"></span>
-                    <span>Deutsch</span>
+                    <span>🇩🇪 DE</span>
                   </button>
                 </li>
               </ul>
@@ -366,6 +363,7 @@
             </div>
 
             <div class="gymi-grid" id="gymi-track-grid"></div>
+            <div class="gymi-topic-cards" id="gymi-topic-cards"></div>
 
             <article class="mock-exam-card">
               <div class="mock-exam-header">
@@ -379,6 +377,12 @@
               <p id="mock-exam-description" class="topic-summary"></p>
               <ol id="mock-exam-tasks" class="mock-exam-tasks"></ol>
             </article>
+          </section>
+        </section>
+
+        <section class="view" data-view="lang-topic">
+          <section class="section-block lang-topic-layout">
+            <div id="lang-topic-page-root"></div>
           </section>
         </section>
 
@@ -606,6 +610,6 @@
       </main>
     </div>
 
-    <script type="module" src="./dist/client/app.js?v=20260416-2"></script>
+    <script type="module" src="./dist/client/app.js?v=20260419-1"></script>
   </body>
 </html>

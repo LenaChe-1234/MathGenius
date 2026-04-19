@@ -1,9 +1,10 @@
 import { seedGymiTracks, seedMockExams, seedTopics } from "../content/seed-content.js";
 import { formatMathText } from "./math-text.js";
+import { LangGymiTopicPage } from "./lang-gymi-topic-page.js";
 import { SimplifyTermsCanvas } from "./simplify-terms-canvas.js";
 
 type Language = "en" | "de";
-type ViewName = "home" | "topics" | "plan" | "gymi" | "profile" | "auth" | "change-email" | "change-password";
+type ViewName = "home" | "topics" | "plan" | "gymi" | "lang-topic" | "profile" | "auth" | "change-email" | "change-password";
 type AuthMode = "sign-up" | "log-in";
 type Goal = "school" | "confidence" | "gymi";
 type Intensity = "light" | "steady" | "focus";
@@ -1009,7 +1010,7 @@ const dom = {
   openAuthButton: query<HTMLButtonElement>("#open-auth-button"),
   languageToggleButton: query<HTMLButtonElement>("#language-toggle-button"),
   languageCurrentLabel: query<HTMLElement>("#language-current-label"),
-  languageFlag: query<HTMLElement>("#csd-flag-container"),
+  languageFlag: queryOptional<HTMLElement>("#csd-flag-container"),
   languageOptionEnglish: query<HTMLButtonElement>("#language-option-en"),
   languageOptionGerman: query<HTMLButtonElement>("#language-option-de"),
   languageMenu: query<HTMLElement>("#language-menu"),
@@ -1057,10 +1058,12 @@ const dom = {
   savedPlanTopics: query<HTMLElement>("#saved-plan-topics"),
   progressRing: query<HTMLElement>(".progress-ring"),
   gymiTrackGrid: query<HTMLElement>("#gymi-track-grid"),
+  gymiTopicCards: query<HTMLElement>("#gymi-topic-cards"),
   mockExamTitle: query<HTMLElement>("#mock-exam-title"),
   mockExamDescription: query<HTMLElement>("#mock-exam-description"),
   mockExamTasks: query<HTMLElement>("#mock-exam-tasks"),
   switchExamButton: query<HTMLButtonElement>("#switch-exam-button"),
+  langTopicPageRoot: query<HTMLElement>("#lang-topic-page-root"),
   signUpTab: query<HTMLButtonElement>("#sign-up-tab-page"),
   logInTab: query<HTMLButtonElement>("#log-in-tab-page"),
   authForm: query<HTMLFormElement>("#auth-form-page"),
@@ -1188,6 +1191,10 @@ let topicRecords: ApiTopic[] = seedTopics.slice();
 let gymiTrackRecords: ApiGymiTrack[] = seedGymiTracks.slice();
 let mockExamRecords: ApiMockExam[] = seedMockExams.slice();
 const simplifyTermsCanvas = new SimplifyTermsCanvas(dom.topicCanvas);
+const langGymiTopicPage = new LangGymiTopicPage(dom.langTopicPageRoot, () => {
+  openExamTrack("lang");
+  renderGymiArea();
+});
 
 initialize().catch((error: unknown) => {
   console.error(error);
@@ -1425,6 +1432,7 @@ function renderAll(): void {
   renderTopicsArea();
   renderPlanArea();
   renderGymiArea();
+  renderLangTopicPage();
   renderAuthPage();
   renderProfilePage();
 }
@@ -1435,9 +1443,8 @@ function renderShell(): void {
   document.title = t.documentTitle;
   dom.html.lang = state.language;
   dom.languageSwitcher.setAttribute("aria-label", t.languageSwitcherLabel);
-  dom.languageCurrentLabel.textContent = state.language === "en" ? "EN" : "DE";
+  dom.languageCurrentLabel.textContent = state.language === "en" ? "🇬🇧 EN" : "🇩🇪 DE";
   dom.languageToggleButton.setAttribute("aria-label", state.language === "en" ? "English" : "Deutsch");
-  dom.languageFlag.className = `csd-indicator-flag ${state.language === "en" ? "csd-flag-uk" : "csd-flag-de"}`;
   dom.languageOptionEnglish.parentElement?.toggleAttribute("hidden", state.language === "en");
   dom.languageOptionGerman.parentElement?.toggleAttribute("hidden", state.language === "de");
   if (dom.navHome) {
@@ -1781,6 +1788,7 @@ function renderGymiArea(): void {
   });
 
   dom.gymiTrackGrid.innerHTML = "";
+  dom.gymiTopicCards.innerHTML = "";
 
   tracks.forEach((track) => {
     const card = document.createElement("article");
@@ -1803,6 +1811,28 @@ function renderGymiArea(): void {
     dom.gymiTrackGrid.appendChild(card);
   });
 
+  if (state.activeTrackId === "lang") {
+    const topicCard = document.createElement("article");
+    topicCard.className = "gymi-topic-card";
+    topicCard.innerHTML = `
+      <span class="panel-kicker">${state.language === "de" ? "Erstes Thema" : "First topic"}</span>
+      <h3>${state.language === "de" ? "Terme vereinfachen" : "Simplify expressions"}</h3>
+      <p>${
+        state.language === "de"
+          ? "Öffne eine eigene Seite mit Aufgaben zu Klammern, Produkten, Brüchen und Wurzeln."
+          : "Open a dedicated page with tasks on brackets, products, fractions, and square roots."
+      }</p>
+      <button class="primary-button" type="button">${state.language === "de" ? "Thema öffnen" : "Open topic"}</button>
+    `;
+
+    topicCard.querySelector<HTMLButtonElement>("button")?.addEventListener("click", () => {
+      navigateTo("lang-topic");
+      renderLangTopicPage();
+    });
+
+    dom.gymiTopicCards.appendChild(topicCard);
+  }
+
   if (exams.length === 0) {
     dom.switchExamButton.hidden = true;
     dom.mockExamTitle.textContent = "";
@@ -1823,6 +1853,15 @@ function renderGymiArea(): void {
   dom.mockExamTitle.textContent = exam.title;
   dom.mockExamDescription.textContent = exam.description;
   fillList(dom.mockExamTasks, exam.tasks);
+}
+
+function renderLangTopicPage(): void {
+  if (state.currentView === "lang-topic") {
+    langGymiTopicPage.show(state.language);
+    return;
+  }
+
+  langGymiTopicPage.hide();
 }
 
 function renderAuthPage(): void {
@@ -2575,8 +2614,7 @@ function persistAuthState(): void {
 }
 
 function loadLanguage(): Language {
-  const value = localStorage.getItem(storageKeys.language);
-  return value === "en" ? "en" : "de";
+  return "de";
 }
 
 function setLanguage(language: Language): void {
@@ -2794,6 +2832,7 @@ function isViewName(value: string | undefined): value is ViewName {
     value === "topics" ||
     value === "plan" ||
     value === "gymi" ||
+    value === "lang-topic" ||
     value === "profile" ||
     value === "auth" ||
     value === "change-email" ||

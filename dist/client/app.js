@@ -1,5 +1,6 @@
 import { seedGymiTracks, seedMockExams, seedTopics } from "../content/seed-content.js";
 import { formatMathText } from "./math-text.js";
+import { LangGymiTopicPage } from "./lang-gymi-topic-page.js";
 import { SimplifyTermsCanvas } from "./simplify-terms-canvas.js";
 const homePageContent = {
     en: {
@@ -673,7 +674,7 @@ const dom = {
     openAuthButton: query("#open-auth-button"),
     languageToggleButton: query("#language-toggle-button"),
     languageCurrentLabel: query("#language-current-label"),
-    languageFlag: query("#csd-flag-container"),
+    languageFlag: queryOptional("#csd-flag-container"),
     languageOptionEnglish: query("#language-option-en"),
     languageOptionGerman: query("#language-option-de"),
     languageMenu: query("#language-menu"),
@@ -721,10 +722,12 @@ const dom = {
     savedPlanTopics: query("#saved-plan-topics"),
     progressRing: query(".progress-ring"),
     gymiTrackGrid: query("#gymi-track-grid"),
+    gymiTopicCards: query("#gymi-topic-cards"),
     mockExamTitle: query("#mock-exam-title"),
     mockExamDescription: query("#mock-exam-description"),
     mockExamTasks: query("#mock-exam-tasks"),
     switchExamButton: query("#switch-exam-button"),
+    langTopicPageRoot: query("#lang-topic-page-root"),
     signUpTab: query("#sign-up-tab-page"),
     logInTab: query("#log-in-tab-page"),
     authForm: query("#auth-form-page"),
@@ -835,6 +838,10 @@ let topicRecords = seedTopics.slice();
 let gymiTrackRecords = seedGymiTracks.slice();
 let mockExamRecords = seedMockExams.slice();
 const simplifyTermsCanvas = new SimplifyTermsCanvas(dom.topicCanvas);
+const langGymiTopicPage = new LangGymiTopicPage(dom.langTopicPageRoot, () => {
+    openExamTrack("lang");
+    renderGymiArea();
+});
 initialize().catch((error) => {
     console.error(error);
 });
@@ -1046,6 +1053,7 @@ function renderAll() {
     renderTopicsArea();
     renderPlanArea();
     renderGymiArea();
+    renderLangTopicPage();
     renderAuthPage();
     renderProfilePage();
 }
@@ -1054,9 +1062,8 @@ function renderShell() {
     document.title = t.documentTitle;
     dom.html.lang = state.language;
     dom.languageSwitcher.setAttribute("aria-label", t.languageSwitcherLabel);
-    dom.languageCurrentLabel.textContent = state.language === "en" ? "EN" : "DE";
+    dom.languageCurrentLabel.textContent = state.language === "en" ? "🇬🇧 EN" : "🇩🇪 DE";
     dom.languageToggleButton.setAttribute("aria-label", state.language === "en" ? "English" : "Deutsch");
-    dom.languageFlag.className = `csd-indicator-flag ${state.language === "en" ? "csd-flag-uk" : "csd-flag-de"}`;
     dom.languageOptionEnglish.parentElement?.toggleAttribute("hidden", state.language === "en");
     dom.languageOptionGerman.parentElement?.toggleAttribute("hidden", state.language === "de");
     if (dom.navHome) {
@@ -1362,6 +1369,7 @@ function renderGymiArea() {
         return source?.track_code === state.activeTrackId;
     });
     dom.gymiTrackGrid.innerHTML = "";
+    dom.gymiTopicCards.innerHTML = "";
     tracks.forEach((track) => {
         const card = document.createElement("article");
         const isActive = track.id === state.activeTrackId;
@@ -1380,6 +1388,23 @@ function renderGymiArea() {
         });
         dom.gymiTrackGrid.appendChild(card);
     });
+    if (state.activeTrackId === "lang") {
+        const topicCard = document.createElement("article");
+        topicCard.className = "gymi-topic-card";
+        topicCard.innerHTML = `
+      <span class="panel-kicker">${state.language === "de" ? "Erstes Thema" : "First topic"}</span>
+      <h3>${state.language === "de" ? "Terme vereinfachen" : "Simplify expressions"}</h3>
+      <p>${state.language === "de"
+            ? "Öffne eine eigene Seite mit Aufgaben zu Klammern, Produkten, Brüchen und Wurzeln."
+            : "Open a dedicated page with tasks on brackets, products, fractions, and square roots."}</p>
+      <button class="primary-button" type="button">${state.language === "de" ? "Thema öffnen" : "Open topic"}</button>
+    `;
+        topicCard.querySelector("button")?.addEventListener("click", () => {
+            navigateTo("lang-topic");
+            renderLangTopicPage();
+        });
+        dom.gymiTopicCards.appendChild(topicCard);
+    }
     if (exams.length === 0) {
         dom.switchExamButton.hidden = true;
         dom.mockExamTitle.textContent = "";
@@ -1398,6 +1423,13 @@ function renderGymiArea() {
     dom.mockExamTitle.textContent = exam.title;
     dom.mockExamDescription.textContent = exam.description;
     fillList(dom.mockExamTasks, exam.tasks);
+}
+function renderLangTopicPage() {
+    if (state.currentView === "lang-topic") {
+        langGymiTopicPage.show(state.language);
+        return;
+    }
+    langGymiTopicPage.hide();
 }
 function renderAuthPage() {
     const t = translations[state.language];
@@ -2064,8 +2096,7 @@ function persistAuthState() {
     }
 }
 function loadLanguage() {
-    const value = localStorage.getItem(storageKeys.language);
-    return value === "en" ? "en" : "de";
+    return "de";
 }
 function setLanguage(language) {
     state.language = language;
@@ -2255,6 +2286,7 @@ function isViewName(value) {
         value === "topics" ||
         value === "plan" ||
         value === "gymi" ||
+        value === "lang-topic" ||
         value === "profile" ||
         value === "auth" ||
         value === "change-email" ||
